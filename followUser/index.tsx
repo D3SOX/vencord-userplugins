@@ -144,6 +144,9 @@ interface VoiceStateEntry {
 }
 
 function getChannelId(userId: string) {
+    if (!userId) {
+        return null;
+    }
     try {
         const states = VoiceStateStore.getAllVoiceStates();
         for (const users of Object.values(states)) {
