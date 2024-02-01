@@ -113,7 +113,19 @@ export const settings = definePluginSettings({
     },
     followLeave: {
         type: OptionType.BOOLEAN,
+        autoMoveBack: {
+                type: OptionType.BOOLEAN,
+                        description: "Automatically move back to the VC of the followed user when you got moved",
+                                restartNeeded: false,
+                                        default: false
+                                            },
         description: "Also leave when the followed user leaves",
+        restartNeeded: false,
+        default: false
+    },
+    autoMoveBack: {
+        type: OptionType.BOOLEAN,
+        description: "Automatically move back to the VC of the followed user when you got moved",
         restartNeeded: false,
         default: false
     },
@@ -268,15 +280,20 @@ export default definePlugin({
             if (settings.store.onlyManualTrigger || !settings.store.followUserId) {
                 return;
             }
-            for (const state of voiceStates) {
-                const { userId, channelId, oldChannelId } = state;
-                const isFollowed = settings.store.followUserId === userId;
-
-                if (!isFollowed) {
-                    continue;
-                }
-
+            for (const { userId, channelId, oldChannelId } of voiceStates) {
                 if (channelId !== oldChannelId) {
+                    const isMe = userId === UserStore.getCurrentUser().id;
+                    // move back if the setting is on and you were moved
+                    if (isMe && channelId && settings.store.autoMoveBack) {
+                        triggerFollow();
+                        continue;
+                    }
+
+                    const isFollowed = settings.store.followUserId === userId;
+                    if (!isFollowed) {
+                        continue;
+                    }
+
                     if (channelId) {
                         // move or join new channel -> also join
                         triggerFollow(channelId);
