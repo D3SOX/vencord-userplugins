@@ -111,14 +111,14 @@ export const settings = definePluginSettings({
         restartNeeded: false,
         default: false
     },
+    autoMoveBack: {
+        type: OptionType.BOOLEAN,
+        description: "Automatically move back to the VC of the followed user when you got moved",
+        restartNeeded: false,
+        default: false
+    },
     followLeave: {
         type: OptionType.BOOLEAN,
-        autoMoveBack: {
-                type: OptionType.BOOLEAN,
-                        description: "Automatically move back to the VC of the followed user when you got moved",
-                                restartNeeded: false,
-                                        default: false
-                                            },
         description: "Also leave when the followed user leaves",
         restartNeeded: false,
         default: false
