@@ -12,7 +12,7 @@ import { LazyComponent } from "@utils/lazyReact";
 import { classes } from "@utils/misc";
 import definePlugin, { OptionType } from "@utils/types";
 import { filters, find, findByPropsLazy, findStoreLazy } from "@webpack";
-import { Menu, React, SelectedChannelStore, Toasts, UserStore } from "@webpack/common";
+import { ChannelStore, Menu, PermissionsBits, PermissionStore, React, SelectedChannelStore, Toasts, UserStore } from "@webpack/common";
 import type { Channel, User } from "discord-types/general";
 import type { PropsWithChildren, SVGProps } from "react";
 
@@ -135,6 +135,12 @@ export const settings = definePluginSettings({
         restartNeeded: false,
         hidden: true, // Managed via context menu and indicator
         default: "",
+    },
+    channelFull: {
+        type: OptionType.BOOLEAN,
+        description: "Attempt to move you to the channel when is not full anymore",
+        restartNeeded: false,
+        default: false
     }
 });
 
@@ -144,15 +150,19 @@ const ChannelActions: {
 } = findByPropsLazy("disconnect", "selectVoiceChannel");
 
 const VoiceStateStore: VoiceStateStore = findStoreLazy("VoiceStateStore");
+const CONNECT = 1n << 20n;
 
 interface VoiceStateStore {
     getAllVoiceStates(): VoiceStateEntry;
+    getVoiceStatesForChannel(channelId: string): VoiceStateMember;
 }
 
 interface VoiceStateEntry {
-    [guildIdOrMe: string]: {
-        [userId: string]: VoiceState;
-    }
+    [guildIdOrMe: string]: VoiceStateMember;
+}
+
+interface VoiceStateMember {
+    [userId: string]: VoiceState;
 }
 
 function getChannelId(userId: string) {
@@ -166,22 +176,48 @@ function getChannelId(userId: string) {
                 return users[userId].channelId ?? null;
             }
         }
-    } catch (e) {}
+    } catch (e) { }
     return null;
 }
 
-function triggerFollow(userChannelId: string | null = getChannelId(settings.store.followUserId)) {
+function triggerFollow(userChannelId: string | null = getChannelId(settings.store.followUserId), retry = false) {
     if (settings.store.followUserId) {
         const myChanId = SelectedChannelStore.getVoiceChannelId();
         if (userChannelId) {
             // join when not already in the same channel
             if (userChannelId !== myChanId) {
-                ChannelActions.selectVoiceChannel(userChannelId);
-                Toasts.show({
-                    message: "Followed user into a new voice channel",
-                    id: Toasts.genId(),
-                    type: Toasts.Type.SUCCESS
-                });
+                const channel = ChannelStore.getChannel(userChannelId);
+                const voiceStates = VoiceStateStore.getVoiceStatesForChannel(userChannelId);
+                const memberCount = voiceStates ? Object.keys(voiceStates).length : null;
+                if (PermissionStore.can(CONNECT, channel)) {
+                    if (channel.userLimit !== 0 && memberCount && memberCount >= channel.userLimit && !PermissionStore.can(PermissionsBits.MOVE_MEMBERS, channel)) {
+                        if (settings.store.channelFull) {
+                            setTimeout(() => {
+                                triggerFollow(userChannelId, true);
+                            }, 5000);
+                        }
+                        if (!retry) {
+                            Toasts.show({
+                                message: "Channel is full",
+                                id: Toasts.genId(),
+                                type: Toasts.Type.FAILURE
+                            });
+                        }
+                        return;
+                    }
+                    ChannelActions.selectVoiceChannel(userChannelId);
+                    Toasts.show({
+                        message: "Followed user into a new voice channel",
+                        id: Toasts.genId(),
+                        type: Toasts.Type.SUCCESS
+                    });
+                } else {
+                    Toasts.show({
+                        message: "Insufficient permissions to enter in the voice channel",
+                        id: Toasts.genId(),
+                        type: Toasts.Type.FAILURE
+                    });
+                }
             } else {
                 Toasts.show({
                     message: "You are already in the same channel",
