@@ -6,7 +6,7 @@
 
 import { addContextMenuPatch, NavContextMenuPatchCallback, removeContextMenuPatch } from "@api/ContextMenu";
 import { showNotification } from "@api/Notifications";
-import { definePluginSettings } from "@api/Settings";
+import { Settings, definePluginSettings } from "@api/Settings";
 import { Devs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
 import { findByPropsLazy, findStoreLazy } from "@webpack";
@@ -16,8 +16,6 @@ import { CSSProperties } from "react";
 
 import { NotificationsOffIcon } from "./components/NotificationsOffIcon";
 import { NotificationsOnIcon } from "./components/NotificationsOnIcon";
-import { Settings } from "../../Vencord/src/api/Settings";
-
 
 interface PresenceUpdate {
     user: {
