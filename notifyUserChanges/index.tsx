@@ -5,18 +5,68 @@
  */
 
 import { addContextMenuPatch, NavContextMenuPatchCallback, removeContextMenuPatch } from "@api/ContextMenu";
-import { shouldBeNative, showNotification } from "@api/Notifications";
+import { showNotification } from "@api/Notifications";
 import { definePluginSettings } from "@api/Settings";
 import { Devs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
 import { findByPropsLazy, findStoreLazy } from "@webpack";
 import { Menu, PresenceStore, React, SelectedChannelStore, Tooltip, UserStore } from "@webpack/common";
-import { PresenceUpdate, VoiceState } from "@webpack/types";
 import type { Channel, User } from "discord-types/general";
 import { CSSProperties } from "react";
 
 import { NotificationsOffIcon } from "./components/NotificationsOffIcon";
 import { NotificationsOnIcon } from "./components/NotificationsOnIcon";
+import { Settings } from "../../Vencord/src/api/Settings";
+
+
+interface PresenceUpdate {
+    user: {
+        id: string;
+        username?: string;
+        global_name?: string;
+    };
+    clientStatus: {
+        desktop?: string;
+        web?: string;
+        mobile?: string;
+        console?: string;
+    };
+    guildId?: string;
+    status: string;
+    broadcast?: any; // what's this?
+    activities: Array<{
+        session_id: string;
+        created_at: number;
+        id: string;
+        name: string;
+        details?: string;
+        type: number;
+    }>;
+}
+
+interface VoiceState {
+    userId: string;
+    channelId?: string;
+    oldChannelId?: string;
+    deaf: boolean;
+    mute: boolean;
+    selfDeaf: boolean;
+    selfMute: boolean;
+    selfStream: boolean;
+    selfVideo: boolean;
+    sessionId: string;
+    suppress: boolean;
+    requestToSpeakTimestamp: string | null;
+}
+
+function shouldBeNative() {
+    if (typeof Notification === "undefined") return false;
+
+    const { useNative } = Settings.notifications;
+    if (useNative === "always") return true;
+    if (useNative === "not-focused") return !document.hasFocus();
+    return false;
+}
 
 const SessionsStore = findStoreLazy("SessionsStore");
 
