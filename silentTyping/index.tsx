@@ -20,9 +20,8 @@ import { addChatBarButton, ChatBarButton, removeChatBarButton } from "@api/ChatB
 import { ApplicationCommandInputType, ApplicationCommandOptionType, findOption, sendBotMessage } from "@api/Commands";
 import { definePluginSettings } from "@api/Settings";
 import { Devs } from "@utils/constants";
-import { useForceUpdater } from "@utils/react";
 import definePlugin, { OptionType } from "@utils/types";
-import { FluxDispatcher, React, TextInput, useEffect, useState } from "@webpack/common";
+import { FluxDispatcher, React } from "@webpack/common";
 
 const settings = definePluginSettings({
     showIcon: {
@@ -43,28 +42,9 @@ const settings = definePluginSettings({
         restartNeeded: false,
     },
     disabledFor: {
-        type: OptionType.COMPONENT,
+        type: OptionType.STRING,
         description: "Disable functionality for these chats (comma separated list of guild or user IDs)",
         default: "",
-        component: ({ setValue }) => {
-            const update = useForceUpdater();
-            const { disabledFor, specificChats } = settings.use(["disabledFor", "specificChats"]);
-            const [tempVal, setTempVal] = useState(disabledFor);
-
-            useEffect(() => {
-                update();
-            }, [tempVal, specificChats]);
-
-            return (
-                <TextInput
-                    placeholder="IDs"
-                    spellCheck={false}
-                    disabled={!specificChats}
-                    value={tempVal}
-                    onChange={val => { setTempVal(val); setValue(val); }}
-                />
-            );
-        },
     },
 });
 
@@ -99,8 +79,9 @@ const SilentTypingToggle: ChatBarButton = ({ isMainChat, channel }) => {
         if (!isEnabled) {
             tooltip = "Re-enable Silent Typing globally";
         } else {
-            tooltip = shouldEnable ? "Disable Silent Typing for current channel (right-click to toggle globally)"
-                : "Enable Silent Typing for current channel (right-click to toggle globally)";
+            const chatType = channel.guild_id ? "guild" : "user";
+            tooltip = shouldEnable ? `Disable Silent Typing for current ${chatType} (right-click to toggle globally)`
+                : `Enable Silent Typing for current ${chatType} (right-click to toggle globally)`;
         }
     }
 
