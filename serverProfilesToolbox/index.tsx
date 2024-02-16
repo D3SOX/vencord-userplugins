@@ -64,7 +64,6 @@ export default definePlugin({
                     // reset
                     setPendingNickname("");
                     setPendingPronouns("");
-                    const premiumType = UserStore?.getCurrentUser()?.premiumType ?? 0;
                     if (premiumType === 2) {
                         setPendingBio("");
                         setPendingThemeColors([]);
