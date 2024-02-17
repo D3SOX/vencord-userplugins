@@ -4,11 +4,14 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+export const VERSION = "1.0.0";
+
 // Thanks to Kyuuhachi for the original idea and code
 
 import Plugins from "~plugins";
 
 const PLUGINS = [
+    require("./d3soxUpdateNotifier").default,
     require("./followUser").default,
     require("./ignoreTerms").default,
     require("./memberListActivities").default,
