@@ -43,6 +43,9 @@ pnpm build
 
 # Update
 
+> [!IMPORTANT]  
+> The best way to get notified about updates is to either integrate pulling the git repo with something like [topgrade](https://github.com/topgrade-rs/topgrade/) or by watching the repo on GitHub and checking your feed
+
 Just pull the latest changes inside the repository folder
 ```bash
 cd Vencord/src/userplugins/D3SOX-userplugins
