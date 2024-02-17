@@ -30,6 +30,8 @@ Allows you to perform multiple actions on an entire channel (move, mute, disconn
 
 # Install
 
+If you don't know how to install userplugins in the first place please see the manual [Vencord installation guide](https://github.com/Vendicated/Vencord/blob/main/docs/1_INSTALLING.md). If using Vesktop specify the location in Vesktop settings instead of running `pnpm inject`
+
 Clone the repository inside your Vencord `src/userplugins` folder
 ```bash
 cd Vencord/src/userplugins
