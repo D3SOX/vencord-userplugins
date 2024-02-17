@@ -14,11 +14,11 @@ import { VERSION } from "../index";
 
 // Thank you Syncxv for the original code
 
-export const repoName = "vencord-userplugins";
-export const user = "D3SOX";
-export const branch = "master";
+const repoName = "vencord-userplugins";
+const user = "D3SOX";
+const branch = "master";
 
-export async function getUpdateVersion() {
+async function getUpdateVersion() {
     const indexTs = await (await fetch(`https://raw.githubusercontent.com/${user}/${repoName}/${branch}/index.ts`, { cache: "no-cache" })).text();
     const res = indexTs.match(/export const VERSION = "(.+)";/);
     if (!res) return false;
@@ -35,7 +35,7 @@ export async function getUpdateVersion() {
 }
 
 
-export async function checkForUpdates(delay = 0, showNoUpdateToast = true) {
+async function checkForUpdates(delay = 0, showNoUpdateToast = true) {
     const updateVersion = await getUpdateVersion();
     if (!updateVersion) {
         if (showNoUpdateToast)
