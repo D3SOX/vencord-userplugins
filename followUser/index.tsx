@@ -316,13 +316,13 @@ export default definePlugin({
                 if (channelId !== oldChannelId) {
                     const isMe = userId === UserStore.getCurrentUser().id;
                     // move back if the setting is on and you were moved
-                    if (settings.store.autoMoveBack && isMe && channelId) {
+                    if (settings.store.autoMoveBack && isMe && channelId && oldChannelId) {
                         triggerFollow();
                         continue;
                     }
 
                     // if you're not in the channel of the followed user and it is no longer full, join
-                    if (settings.store.channelFull && !channelId && oldChannelId && oldChannelId !== SelectedChannelStore.getVoiceChannelId()) {
+                    if (settings.store.channelFull && !isMe && !channelId && oldChannelId && oldChannelId !== SelectedChannelStore.getVoiceChannelId()) {
                         const channel = ChannelStore.getChannel(oldChannelId);
                         const channelVoiceStates = VoiceStateStore.getVoiceStatesForChannel(oldChannelId);
                         const memberCount = channelVoiceStates ? Object.keys(channelVoiceStates).length : null;
