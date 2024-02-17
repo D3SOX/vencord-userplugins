@@ -19,8 +19,8 @@ export const user = "D3SOX";
 export const branch = "master";
 
 export async function getUpdateVersion() {
-    const indexTsx = await (await fetch(`https://raw.githubusercontent.com/${user}/${repoName}/${branch}/index.ts`, { cache: "no-cache" })).text();
-    const res = indexTsx.match(/export const VERSION = "(.+)";/);
+    const indexTs = await (await fetch(`https://raw.githubusercontent.com/${user}/${repoName}/${branch}/index.ts`, { cache: "no-cache" })).text();
+    const res = indexTs.match(/export const VERSION = "(.+)";/);
     if (!res) return false;
 
     const [_, version] = res;
