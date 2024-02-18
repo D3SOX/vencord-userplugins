@@ -170,14 +170,8 @@ export default definePlugin({
                 }
 
                 if (application) {
-                    // XBox application id
-                    if (application_id === "438122941302046720") {
-                        const src = "https://discord.com/assets/9a15d086141be29d9fcd.png";
-                        icons.push(<img src={src} alt={application.name} />);
-                        return;
-                    }
-
-                    const src = `https://cdn.discordapp.com/app-icons/${application.id}/${application.icon}.png`;
+                    const xbox_application_id = "438122941302046720";
+                    const src = application.id === xbox_application_id ? "https://discord.com/assets/9a15d086141be29d9fcd.png" : `https://cdn.discordapp.com/app-icons/${application.id}/${application.icon}.png`;
                     icons.push(<img src={src} alt={application.name} />);
                 }
             }
