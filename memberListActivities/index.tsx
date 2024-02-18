@@ -104,7 +104,13 @@ const fetchedApplications = new Map<string, Application | null>();
 export default definePlugin({
     name: "MemberListActivities",
     description: "Shows activity icons in the member list",
-    authors: [Devs.D3SOX],
+    authors: [
+        Devs.D3SOX,
+        {
+            name: "dropped#0001",
+            id: 328165170536775680n,
+        },
+    ],
     tags: ["activity"],
 
     settings,
@@ -132,11 +138,11 @@ export default definePlugin({
                     if (image.startsWith("mp:")) {
                         const discordMediaLink = `https://media.discordapp.net/${image.replace(/mp:/, "")}`;
                         if (settings.store.renderGifs || !discordMediaLink.endsWith(".gif")) {
-                            icons.push(<img src={discordMediaLink} alt={alt}/>);
+                            icons.push(<img src={discordMediaLink} alt={alt} />);
                         }
                     } else {
                         const src = `https://cdn.discordapp.com/app-assets/${application_id}/${image}.png`;
-                        icons.push(<img src={src} alt={alt}/>);
+                        icons.push(<img src={src} alt={alt} />);
                     }
                 };
 
@@ -164,8 +170,9 @@ export default definePlugin({
                 }
 
                 if (application) {
-                    const src = `https://cdn.discordapp.com/app-icons/${application.id}/${application.icon}.png`;
-                    icons.push(<img src={src} alt={application.name}/>);
+                    const xbox_application_id = "438122941302046720";
+                    const src = application.id === xbox_application_id ? "https://discord.com/assets/9a15d086141be29d9fcd.png" : `https://cdn.discordapp.com/app-icons/${application.id}/${application.icon}.png`;
+                    icons.push(<img src={src} alt={application.name} />);
                 }
             }
         });
