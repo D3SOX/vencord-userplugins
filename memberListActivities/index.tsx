@@ -79,7 +79,6 @@ interface Application {
     publishers: Developer[];
     developers: Developer[];
     flags: number;
-    platform?: string;
 }
 
 interface Developer {
@@ -172,7 +171,7 @@ export default definePlugin({
                 }
 
                 if (application) {
-                    const src = application?.platform === 'xbox' && application.icon === null ? "https://discord.com/assets/9a15d086141be29d9fcd.png" : `https://cdn.discordapp.com/app-icons/${application.id}/${application.icon}.png`;
+                    const src = platform === 'xbox' && application.icon === null ? "https://discord.com/assets/9a15d086141be29d9fcd.png" : `https://cdn.discordapp.com/app-icons/${application.id}/${application.icon}.png`;
                     icons.push(<img src={src} alt={application.name} />);
                 } else {
                     if (platform === 'xbox') {
