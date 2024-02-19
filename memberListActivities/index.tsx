@@ -60,6 +60,7 @@ interface Activity {
         small_text?: string;
         small_image?: string;
     };
+    platform?: string;
 }
 
 const cl = classNameFactory("vc-mla-");
@@ -78,6 +79,7 @@ interface Application {
     publishers: Developer[];
     developers: Developer[];
     flags: number;
+    platform?: string;
 }
 
 interface Developer {
@@ -126,10 +128,10 @@ export default definePlugin({
             icons.push(<TwitchIcon />);
         }
 
-        const applications = activities.filter(activity => activity.application_id);
+        const applications = activities.filter(activity => activity.application_id || activity.platform);
         applications.forEach(activity => {
-            const { assets, application_id } = activity;
-            if (!application_id) {
+            const { assets, application_id, platform } = activity;
+            if (!application_id && !platform) {
                 return;
             }
             if (assets) {
@@ -170,9 +172,13 @@ export default definePlugin({
                 }
 
                 if (application) {
-                    const xbox_application_id = "438122941302046720";
-                    const src = application.id === xbox_application_id ? "https://discord.com/assets/9a15d086141be29d9fcd.png" : `https://cdn.discordapp.com/app-icons/${application.id}/${application.icon}.png`;
+                    const src = application?.platform === 'xbox' && application.icon === null ? "https://discord.com/assets/9a15d086141be29d9fcd.png" : `https://cdn.discordapp.com/app-icons/${application.id}/${application.icon}.png`;
                     icons.push(<img src={src} alt={application.name} />);
+                } else {
+                    if (platform === 'xbox') {
+                        const src = 'https://discord.com/assets/9a15d086141be29d9fcd.png';
+                        icons.push(<img src={src} alt='Xbox' />);
+                    }
                 }
             }
         });
