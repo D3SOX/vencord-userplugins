@@ -102,6 +102,8 @@ const { fetchApplication }: {
 
 const fetchedApplications = new Map<string, Application | null>();
 
+const xboxUrl = "https://discord.com/assets/9a15d086141be29d9fcd.png";
+
 export default definePlugin({
     name: "MemberListActivities",
     description: "Shows activity icons in the member list",
@@ -171,13 +173,12 @@ export default definePlugin({
                 }
 
                 if (application) {
-                    const src = platform === "xbox" && application.icon === null ? "https://discord.com/assets/9a15d086141be29d9fcd.png" : `https://cdn.discordapp.com/app-icons/${application.id}/${application.icon}.png`;
+                    const src = platform === "xbox" && application.icon === null ? xboxUrl : `https://cdn.discordapp.com/app-icons/${application.id}/${application.icon}.png`;
                     icons.push(<img src={src} alt={application.name} />);
                 }
             } else {
                 if (platform === "xbox") {
-                    const src = "https://discord.com/assets/9a15d086141be29d9fcd.png";
-                    icons.push(<img src={src} alt="Xbox" />);
+                    icons.push(<img src={xboxUrl} alt="Xbox" />);
                 }
             }
         });
