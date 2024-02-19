@@ -25,6 +25,7 @@ import { Devs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
 import { findByPropsLazy, findStoreLazy } from "@webpack";
 
+import { PlaystationIcon } from "./components/PlaystationIcon";
 import { SpotifyIcon } from "./components/SpotifyIcon";
 import { TwitchIcon } from "./components/TwitchIcon";
 
@@ -171,8 +172,15 @@ export default definePlugin({
 
                 if (application) {
                     const xbox_application_id = "438122941302046720";
-                    const src = application.id === xbox_application_id ? "https://discord.com/assets/9a15d086141be29d9fcd.png" : `https://cdn.discordapp.com/app-icons/${application.id}/${application.icon}.png`;
-                    icons.push(<img src={src} alt={application.name} />);
+                    const playstation_application_id = "497898978466070528";
+                    const src = application.id === xbox_application_id ? "https://discord.com/assets/9a15d086141be29d9fcd.png"
+                        : application.id === playstation_application_id ? <PlaystationIcon />
+                            : `https://cdn.discordapp.com/app-icons/${application.id}/${application.icon}.png`;
+
+                    if (typeof src === "string")
+                        icons.push(<img src={src} alt={application.name} />);
+                    else
+                        icons.push(src);
                 }
             }
         });
