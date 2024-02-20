@@ -185,7 +185,7 @@ export default definePlugin({
 
         if (icons.length) {
             const compareJSXElementsSource = (a: JSX.Element, b: JSX.Element) => {
-                return JSON.stringify(a.props.src) === JSON.stringify(b.props.src);
+                return a.props.src === b.props.src;
             }
             const uniqueIcons = icons.filter((element, index, array) => {
                 return array.findIndex(el => compareJSXElementsSource(el, element)) === index;
