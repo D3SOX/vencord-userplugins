@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-export const VERSION = "1.0.2";
+export const VERSION = "1.0.3";
 
 // Thanks to Kyuuhachi for the original idea and code
 
