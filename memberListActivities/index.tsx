@@ -190,7 +190,7 @@ export default definePlugin({
         if (icons.length) {
             const compareJSXElementsSource = (a: JSX.Element, b: JSX.Element) => {
                 return a.props?.src === b.props?.src;
-            }
+            };
             const uniqueIcons = icons.filter((element, index, array) => {
                 return array.findIndex(el => compareJSXElementsSource(el, element)) === index;
             });
@@ -213,7 +213,7 @@ export default definePlugin({
             // Patch activity icons
             find: "default.getHangStatusActivity():null!",
             replacement: {
-                match: /null!=(\i)&&(\i).some\((\i).default\)\?/,
+                match: /null!=(\i)&&\i.some\(\i=>\(0,\i.default\)\(\i,\i\)\)\?/,
                 replace: "$self.patchActivityList($1),false?"
             }
         },
