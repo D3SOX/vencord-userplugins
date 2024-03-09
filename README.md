@@ -18,6 +18,9 @@ Shows activity icons in the member list
 [**NotifyUserChanges**](./notifyUserChanges)  
 Adds a notify option in the user context menu to get notified when a user changes voice channels or online status
 
+[**ScreenShareStreamerMode**](./screenShareStreamerMode)  
+Automatically enables streamer mode while screen sharing
+
 [**ServerProfilesToolbox**](./serverProfilesToolbox)  
 Adds a copy/paste/reset button to the server profiles editor
 

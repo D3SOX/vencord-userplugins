@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-export const VERSION = "1.0.5";
+export const VERSION = "1.0.6";
 
 // Thanks to Kyuuhachi for the original idea and code
 
@@ -16,6 +16,7 @@ const PLUGINS = [
     require("./ignoreTerms").default,
     require("./memberListActivities").default,
     require("./notifyUserChanges").default,
+    require("./screenShareStreamerMode").default,
     require("./serverProfilesToolbox").default,
     require("./silentTyping").default,
     require("./voiceChatUtilities").default,
