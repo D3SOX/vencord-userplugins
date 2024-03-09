@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { addContextMenuPatch, NavContextMenuPatchCallback, removeContextMenuPatch } from "@api/ContextMenu";
+import { NavContextMenuPatchCallback } from "@api/ContextMenu";
 import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 import { findStoreLazy } from "@webpack";
@@ -35,7 +35,7 @@ interface VoiceChannelContextProps {
     channel: Channel;
 }
 
-const VoiceChannelContext: NavContextMenuPatchCallback = (children, { channel }: VoiceChannelContextProps) => () => {
+const VoiceChannelContext: NavContextMenuPatchCallback = (children, { channel }: VoiceChannelContextProps) => {
     // only for voice and stage channels
     if (!channel || (channel.type !== 2 && channel.type !== 13)) return;
     const userCount = Object.keys(VoiceStateStore.getVoiceStatesForChannel(channel.id)).length;
@@ -127,12 +127,8 @@ export default definePlugin({
     description: "This plugin allows you to perform multiple actions on an entire channel (move, mute, disconnect, etc.) (originally by dutake)",
     authors: [{ name: "! 𝕯'𝖆𝖒𝖘", id: 769939285792653325n }, Devs.D3SOX],
 
-    start() {
-        addContextMenuPatch("channel-context", VoiceChannelContext);
-    },
-
-    stop() {
-        removeContextMenuPatch("channel-context", VoiceChannelContext);
+    contextMenus: {
+        "channel-context": VoiceChannelContext
     },
 });
 

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { addContextMenuPatch, NavContextMenuPatchCallback, removeContextMenuPatch } from "@api/ContextMenu";
+import { NavContextMenuPatchCallback } from "@api/ContextMenu";
 import { definePluginSettings, useSettings } from "@api/Settings";
 import ErrorBoundary from "@components/ErrorBoundary";
 import { Devs } from "@utils/constants";
@@ -264,7 +264,7 @@ interface UserContextProps {
     user: User;
 }
 
-const UserContext: NavContextMenuPatchCallback = (children, { user }: UserContextProps) => () => {
+const UserContext: NavContextMenuPatchCallback = (children, { user }: UserContextProps) => {
     if (!user || user.id === UserStore.getCurrentUser().id) return;
     const isFollowed = settings.store.followUserId === user.id;
     const label = isFollowed ? "Unfollow User" : "Follow User";
@@ -299,12 +299,8 @@ export default definePlugin({
         },
     ],
 
-    start() {
-        addContextMenuPatch("user-context", UserContext);
-    },
-
-    stop() {
-        removeContextMenuPatch("user-context", UserContext);
+    contextMenus: {
+        "user-context": UserContext
     },
 
     flux: {

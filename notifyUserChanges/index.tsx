@@ -4,9 +4,11 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { addContextMenuPatch, NavContextMenuPatchCallback, removeContextMenuPatch } from "@api/ContextMenu";
+// TODO: add notify on messages in inactive channels
+
+import { NavContextMenuPatchCallback } from "@api/ContextMenu";
 import { showNotification } from "@api/Notifications";
-import { Settings, definePluginSettings } from "@api/Settings";
+import { definePluginSettings,Settings } from "@api/Settings";
 import { Devs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
 import { findByPropsLazy, findStoreLazy } from "@webpack";
@@ -255,7 +257,7 @@ interface UserContextProps {
     user: User;
 }
 
-const UserContext: NavContextMenuPatchCallback = (children, { user }: UserContextProps) => () => {
+const UserContext: NavContextMenuPatchCallback = (children, { user }: UserContextProps) => {
     if (!user || user.id === UserStore.getCurrentUser().id) return;
     const isNotifyOn = getUserIdList().includes(user.id);
     const label = isNotifyOn ? "Don't notify on changes" : "Notify on changes";
@@ -282,12 +284,8 @@ export default definePlugin({
 
     settings,
 
-    start() {
-        addContextMenuPatch("user-context", UserContext);
-    },
-
-    stop() {
-        removeContextMenuPatch("user-context", UserContext);
+    contextMenus: {
+        "user-context": UserContext
     },
 
     flux: {
