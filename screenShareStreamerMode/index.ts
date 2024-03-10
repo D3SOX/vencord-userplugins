@@ -53,12 +53,12 @@ export default definePlugin({
 
     flux: {
         STREAM_CREATE({ streamKey }: StreamCreateEvent) {
-            if (!isSelf(streamKey)) {
+            if (isSelf(streamKey)) {
                 StreamerModeActions.setEnabled(true);
             }
         },
         STREAM_CLOSE({ streamKey }: StreamCloseEvent) {
-            if (!isSelf(streamKey)) {
+            if (isSelf(streamKey)) {
                 StreamerModeActions.setEnabled(false);
             }
         },
