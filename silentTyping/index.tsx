@@ -26,7 +26,7 @@ import { ChannelStore, FluxDispatcher, React } from "@webpack/common";
 const settings = definePluginSettings({
     showIcon: {
         type: OptionType.BOOLEAN,
-        default: false,
+        default: true,
         description: "Show an icon for toggling the plugin",
         restartNeeded: true,
     },
