@@ -6,6 +6,9 @@
 
 import { getNative } from "./shared/native";
 
+// needs to stay here to notify users of the old version
+export const VERSION = "2.0.0";
+
 export const Native = getNative();
 
 import Plugins from "~plugins";
