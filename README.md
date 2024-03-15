@@ -45,9 +45,10 @@ pnpm build
 # Update
 
 > [!IMPORTANT]
-> By installing the repo an update notifier is installed which automatically checks for updates. The automatic checking can be disabled.
+> By installing the repo an updater is installed which automatically checks for updates. The automatic checking can be disabled.  
+> Open the settings of the `D3SOXUpdater` plugin to manually check for updates
 
-Just pull the latest changes inside the repository folder
+To manually update just pull the latest changes inside the repository folder
 ```bash
 cd Vencord/src/userplugins/D3SOX-userplugins
 git pull
