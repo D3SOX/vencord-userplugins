@@ -3,31 +3,31 @@
 These are all my Vencord plugins that are not yet in the [official Vencord repository](https://vencord.dev/plugins#d3sox). Some of them have [pending PRs](https://github.com/Vendicated/Vencord/pulls/d3sox).
 See the plugin folders for screenshots
 
-[**BlockKrisp**](./blockKrisp.discordDesktop)  
+[**BlockKrisp**](./blockKrisp.discordDesktop)
 Prevent Krisp from loading
 
-[**FollowUser**](./followUser)  
+[**FollowUser**](./followUser)
 Adds a follow option in the user context menu to always be in the same VC as them
 
-[**IgnoreTerms**](./ignoreTerms)  
+[**IgnoreTerms**](./ignoreTerms)
 Ignore Discord's new terms of service
 
-[**MemberListActivities**](./memberListActivities)  
+[**MemberListActivities**](./memberListActivities)
 Shows activity icons in the member list
 
-[**NotifyUserChanges**](./notifyUserChanges)  
+[**NotifyUserChanges**](./notifyUserChanges)
 Adds a notify option in the user context menu to get notified when a user changes voice channels or online status
 
-[**ScreenShareStreamerMode**](./screenShareStreamerMode)  
+[**ScreenShareStreamerMode**](./screenShareStreamerMode)
 Automatically enables streamer mode while screen sharing
 
-[**ServerProfilesToolbox**](./serverProfilesToolbox)  
+[**ServerProfilesToolbox**](./serverProfilesToolbox)
 Adds a copy/paste/reset button to the server profiles editor
 
-[**SilentTyping**](./silentTyping)  
+[**SilentTyping**](./silentTyping)
 Enhanced version of SilentTyping with the feature to disable it for specific guilds or users
 
-[**VoiceChatUtilities**](./voiceChatUtilities)  
+[**VoiceChatUtilities**](./voiceChatUtilities)
 Allows you to perform multiple actions on an entire channel (move, mute, disconnect, etc.)
 
 
@@ -44,7 +44,7 @@ pnpm build
 
 # Update
 
-> [!IMPORTANT]  
+> [!IMPORTANT]
 > By installing the repo an update notifier is installed which automatically checks for updates. The automatic checking can be disabled.
 
 Just pull the latest changes inside the repository folder
@@ -53,3 +53,8 @@ cd Vencord/src/userplugins/D3SOX-userplugins
 git pull
 pnpm build
 ```
+
+# Credits
+
+- [Syncxv](https://github.com/Syncxv) for the updater
+- [Kyuuhachi](https://github.com/Kyuuhachi) for the plugin loader

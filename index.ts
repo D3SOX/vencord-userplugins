@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-export const VERSION = "1.1.1";
+import { getNative } from "./shared/native";
 
-// Thanks to Kyuuhachi for the original idea and code
+export const Native = getNative();
 
 import Plugins from "~plugins";
 
