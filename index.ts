@@ -11,7 +11,7 @@ export const Native = getNative();
 import Plugins from "~plugins";
 
 const PLUGINS = [
-    require("./d3soxUpdateNotifier").default,
+    require("./d3soxUpdater").default,
     require("./followUser").default,
     require("./ignoreTerms").default,
     require("./memberListActivities").default,
