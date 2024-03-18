@@ -118,7 +118,10 @@ export default definePlugin({
 
     settings,
 
-    patchActivityList: (activities: Activity[]) => {
+    patchActivityList: (activities: Activity[], shouldShow: boolean, defaultIcon: JSX.Element | null): JSX.Element | null => {
+        if (activities === null) {
+            return null;
+        }
         const icons: JSX.Element[] = [];
 
         if (activities.some(activity => activity.name === "Spotify")) {
@@ -203,9 +206,15 @@ export default definePlugin({
                     ))}
                 </div>
             </ErrorBoundary>;
+        } else {
+            // Show default icon when there are no custom icons
+            const shouldShow = activities.filter(x => x.type !== 4).length !== icons.length;
+            if (shouldShow) {
+                return defaultIcon;
+            }
         }
 
-        return false;
+        return shouldShow ? defaultIcon : null;
     },
 
     patches: [
@@ -213,8 +222,8 @@ export default definePlugin({
             // Patch activity icons
             find: "default.getHangStatusActivity():null!",
             replacement: {
-                match: /null!=(\i)&&\i.some\(\i=>\(0,\i.default\)\(\i,\i\)\)\?/,
-                replace: "$self.patchActivityList($1),false?"
+                match: /null!=(\i)&&(\i.some\(\i=>\(0,\i.default\)\(\i,\i\)\))\?(.{1,60}):null]/,
+                replace: "$self.patchActivityList($1,$2,$3)]"
             }
         },
     ],
