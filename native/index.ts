@@ -7,4 +7,4 @@
 export * from "./updater";
 
 // so we can filter the native helpers by this key
-export function d3soxUpdateNotifierUniqueIdThingyIdkMan() { }
+export function d3soxUpdaterUniqueIdThingyIdkMan() { }
