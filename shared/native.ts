@@ -13,11 +13,11 @@ export function getNative(): PluginNative<typeof import("../native")> {
             getRepoInfo: async () => ({ ok: true, value: { repo: "", gitHash: "" } }),
             getNewCommits: async () => ({ ok: true, value: [] }),
             update: async () => ({ ok: true, value: "" }),
-            d3soxUpdateNotifierUniqueIdThingyIdkMan: async () => { },
+            d3soxUpdaterUniqueIdThingyIdkMan: async () => { },
         } satisfies PluginNative<typeof import("../native")>;
 
         return Native;
     }
     return Object.values(VencordNative.pluginHelpers)
-        .find(m => m.d3soxUpdateNotifierUniqueIdThingyIdkMan) as PluginNative<typeof import("../native")>;
+        .find(m => m.d3soxUpdaterUniqueIdThingyIdkMan) as PluginNative<typeof import("../native")>;
 }
