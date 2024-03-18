@@ -28,7 +28,7 @@ const getCwd = memoize(async () => {
         const pluginDir = join(VENCORD_USER_PLUGIN_DIR, dir.name);
         const files = await readdir(pluginDir);
 
-        if (files.includes("d3soxUpdateNotifier")) return join(VENCORD_USER_PLUGIN_DIR, dir.name);
+        if (files.includes("d3soxUpdater")) return join(VENCORD_USER_PLUGIN_DIR, dir.name);
     }
 });
 
