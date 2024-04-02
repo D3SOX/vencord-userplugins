@@ -23,7 +23,6 @@ interface StreamCreateEvent extends StreamEvent {
 
 interface StreamCloseEvent extends StreamEvent {
     type: "STREAM_CLOSE";
-    streamKey: string;
     canShowFeedback: boolean;
 }
 
