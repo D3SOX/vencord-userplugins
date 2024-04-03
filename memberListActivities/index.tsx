@@ -25,6 +25,7 @@ import { Devs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
 import { findByPropsLazy, findComponentByCodeLazy, findStoreLazy } from "@webpack";
 import { Tooltip } from "@webpack/common";
+import { User } from "discord-types/general";
 import type { ImgHTMLAttributes } from "react";
 
 import { SpotifyIcon } from "./components/SpotifyIcon";
@@ -105,6 +106,7 @@ interface ApplicationIcon {
         alt: string;
     };
     activity: Activity;
+    application?: Application;
 }
 
 interface ActivityListIcon {
@@ -125,7 +127,20 @@ const DefaultActivityIcon = findComponentByCodeLazy("M6,7 L2,7 L2,6 L6,6 L6,7 Z 
 
 const fetchedApplications = new Map<string, Application | null>();
 
-const xboxUrl = "https://discord.com/assets/9a15d086141be29d9fcd.png";
+const xboxUrl = "https://discord.com/assets/9a15d086141be29d9fcd.png"; // TODO: replace with "renderXboxImage"?
+
+const ActivityRenderer = findComponentByCodeLazy("activityGuild", "UserPopoutV2");
+
+// component to render activity with title and description
+const MyActivityRenderer = ({ activity }: Readonly<{ activity: Activity }>) => (
+    <ErrorBoundary>
+        <div className={cl("activity")}>
+            <div className={cl("activity-title")}>{activity.name}</div>
+            <div className={cl("activity-description")}>{activity.details}</div>
+        </div>
+    </ErrorBoundary>
+);
+
 
 function getApplicationIcons(activities: Activity[]) {
     const applicationIcons: ApplicationIcon[] = [];
@@ -184,12 +199,14 @@ function getApplicationIcons(activities: Activity[]) {
                     const src = `https://cdn.discordapp.com/app-icons/${application.id}/${application.icon}.png`;
                     applicationIcons.push({
                         image: { src, alt: application.name },
-                        activity
+                        activity,
+                        application
                     });
                 } else if (platform === "xbox") {
                     applicationIcons.push({
                         image: { src: xboxUrl, alt: "Xbox" },
-                        activity
+                        activity,
+                        application
                     });
                 }
             }
@@ -220,16 +237,22 @@ export default definePlugin({
 
     settings,
 
-    patchActivityList: (activities: Activity[]): JSX.Element | null => {
+    patchActivityList: ({ activities, user }: { activities: Activity[], user: User }): JSX.Element | null => {
         const icons: ActivityListIcon[] = [];
 
         const spotifyActivity = activities.find(({ name }) => name === "Spotify");
         if (spotifyActivity) {
-            icons.push({ iconElement: <SpotifyIcon />, tooltip: spotifyActivity.details ?? spotifyActivity.name });
+            icons.push({
+                iconElement: <SpotifyIcon />,
+                tooltip: <MyActivityRenderer activity={spotifyActivity} />
+            });
         }
         const twitchActivity = activities.find(({ name }) => name === "Twitch");
         if (twitchActivity) {
-            icons.push({ iconElement: <TwitchIcon />, tooltip: twitchActivity.details ?? twitchActivity.name });
+            icons.push({
+                iconElement: <TwitchIcon />,
+                tooltip: <MyActivityRenderer activity={twitchActivity} />
+            });
         }
 
         const applicationIcons = getApplicationIcons(activities);
@@ -243,7 +266,7 @@ export default definePlugin({
             for (const appIcon of uniqueIcons) {
                 icons.push({
                     iconElement: <img {...appIcon.image} />,
-                    tooltip: appIcon.activity.details ?? appIcon.activity.name
+                    tooltip: <MyActivityRenderer activity={appIcon.activity} />
                 });
             }
         }
@@ -251,24 +274,22 @@ export default definePlugin({
         if (icons.length) {
             return <ErrorBoundary noop>
                 <div className={cl("row")}>
-                    {icons.map(({ iconElement, tooltip }, i) => {
-                        return (
-                            <div key={i} className={cl("icon")} style={{
-                                width: `${settings.store.iconSize}px`,
-                                height: `${settings.store.iconSize}px`
-                            }}>
-                                {tooltip ? <Tooltip text={tooltip}>
-                                    {({ onMouseEnter, onMouseLeave }) => (
-                                        <div
-                                            onMouseEnter={onMouseEnter}
-                                            onMouseLeave={onMouseLeave}>
-                                            {iconElement}
-                                        </div>
-                                    )}
-                                </Tooltip> : iconElement}
-                            </div>
-                        );
-                    })}
+                    {icons.map(({ iconElement, tooltip }, i) => (
+                        <div key={i} className={cl("icon")} style={{
+                            width: `${settings.store.iconSize}px`,
+                            height: `${settings.store.iconSize}px`
+                        }}>
+                            {tooltip ? <Tooltip text={tooltip}>
+                                {({ onMouseEnter, onMouseLeave }) => (
+                                    <div
+                                        onMouseEnter={onMouseEnter}
+                                        onMouseLeave={onMouseLeave}>
+                                        {iconElement}
+                                    </div>
+                                )}
+                            </Tooltip> : iconElement}
+                        </div>
+                    ))}
                 </div>
             </ErrorBoundary>;
         } else {
@@ -289,7 +310,7 @@ export default definePlugin({
             find: "default.getHangStatusActivity():null!",
             replacement: {
                 match: /null!=(\i)&&\i.some\(\i=>\(0,\i.default\)\(\i,\i\)\)\?/,
-                replace: "$self.patchActivityList($1),false?"
+                replace: "$self.patchActivityList(e),false?"
             }
         },
     ],
