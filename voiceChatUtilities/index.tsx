@@ -13,21 +13,34 @@ import type { Channel } from "discord-types/general";
 
 const VoiceStateStore = findStoreLazy("VoiceStateStore");
 
+async function runSequential(promises: Promise<any>[]): Promise<any[]> {
+    const results: any[] = [];
+    for (const promise of promises) {
+        const result = await promise;
+        results.push(result);
+    }
+
+    return results;
+}
+
 function sendPatch(channel: Channel, body: Record<string, any>, bypass = false) {
     const usersVoice = VoiceStateStore.getVoiceStatesForChannel(channel.id); // Get voice states by channel id
     const myId = UserStore.getCurrentUser().id; // Get my user id
 
+    const promises: Promise<any>[] = [];
     Object.keys(usersVoice).forEach((key, index) => {
         const userVoice = usersVoice[key];
 
         if (bypass || userVoice.userId !== myId) {
-            setTimeout(() => {
-                RestAPI.patch({
-                    url: `/guilds/${channel.guild_id}/members/${userVoice.userId}`,
-                    body: body
-                });
-            }, index * 500);
+            promises.push(RestAPI.patch({
+                url: `/guilds/${channel.guild_id}/members/${userVoice.userId}`,
+                body: body
+            }));
         }
+    });
+
+    runSequential(promises).catch(error => {
+        console.error("VoiceChatUtilities failed to run", error);
     });
 }
 
