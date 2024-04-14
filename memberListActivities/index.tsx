@@ -139,7 +139,7 @@ function getActivityImage(activity: Activity): string | undefined {
             return image.replace("spotify:", "https://i.scdn.co/image/");
         }
     }
-    // TODO: we could support other assets here, like showing the small/large image counterpart in comparison to that was shown in the activity list
+    // TODO: we could support other assets here
 }
 
 const ActivityTooltip = ({ activity }: Readonly<{ activity: Activity }>) => {
