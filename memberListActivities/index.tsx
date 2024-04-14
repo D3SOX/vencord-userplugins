@@ -24,7 +24,7 @@ import ErrorBoundary from "@components/ErrorBoundary";
 import { Devs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
 import { findByPropsLazy, findComponentByCodeLazy, findStoreLazy } from "@webpack";
-import { Tooltip } from "@webpack/common";
+import { Tooltip, useMemo } from "@webpack/common";
 import { User } from "discord-types/general";
 import type { ImgHTMLAttributes } from "react";
 
@@ -129,17 +129,44 @@ const fetchedApplications = new Map<string, Application | null>();
 
 const xboxUrl = "https://discord.com/assets/9a15d086141be29d9fcd.png"; // TODO: replace with "renderXboxImage"?
 
-const ActivityRenderer = findComponentByCodeLazy("activityGuild", "UserPopoutV2");
+function getActivityImage(activity: Activity): string | undefined {
+    if (activity.type === 2 && activity.name === "Spotify") {
+        // get either from large or small image
+        const image = activity.assets?.large_image ?? activity.assets?.small_image;
+        // image needs to replace 'spotify:
+        if (image?.startsWith("spotify:")) {
+            // spotify cover art is always https://i.scdn.co/image/ID
+            return image.replace("spotify:", "https://i.scdn.co/image/");
+        }
+    }
+    // TODO: we could support other assets here, like showing the small/large image counterpart in comparison to that was shown in the activity list
+}
 
-// component to render activity with title and description
-const MyActivityRenderer = ({ activity }: Readonly<{ activity: Activity }>) => (
-    <ErrorBoundary>
-        <div className={cl("activity")}>
-            <div className={cl("activity-title")}>{activity.name}</div>
-            <div className={cl("activity-description")}>{activity.details}</div>
-        </div>
-    </ErrorBoundary>
-);
+const ActivityTooltip = ({ activity }: Readonly<{ activity: Activity }>) => {
+    const image = useMemo(() => {
+        const activityImage = getActivityImage(activity);
+        if (activityImage) {
+            return activityImage;
+        }
+        const icon = getApplicationIcons([activity])[0];
+        return icon?.image.src;
+    }, [activity]);
+
+    const hasDetails = activity.details ?? activity.state;
+    return (
+        <ErrorBoundary>
+            <div className={cl("activity")}>
+                {image && <img className={cl("activity-image")} src={image} alt="Activity logo" />}
+                <div className={cl("activity-title")}>{activity.name}</div>
+                {hasDetails && <div className={cl("activity-divider")} />}
+                <div className={cl("activity-details")}>
+                    <div>{activity.details}</div>
+                    <div>{activity.state}</div>
+                </div>
+            </div>
+        </ErrorBoundary>
+    );
+};
 
 
 function getApplicationIcons(activities: Activity[]) {
@@ -244,14 +271,14 @@ export default definePlugin({
         if (spotifyActivity) {
             icons.push({
                 iconElement: <SpotifyIcon />,
-                tooltip: <MyActivityRenderer activity={spotifyActivity} />
+                tooltip: <ActivityTooltip activity={spotifyActivity} />
             });
         }
         const twitchActivity = activities.find(({ name }) => name === "Twitch");
         if (twitchActivity) {
             icons.push({
                 iconElement: <TwitchIcon />,
-                tooltip: <MyActivityRenderer activity={twitchActivity} />
+                tooltip: <ActivityTooltip activity={twitchActivity} />
             });
         }
 
@@ -266,7 +293,7 @@ export default definePlugin({
             for (const appIcon of uniqueIcons) {
                 icons.push({
                     iconElement: <img {...appIcon.image} />,
-                    tooltip: <MyActivityRenderer activity={appIcon.activity} />
+                    tooltip: <ActivityTooltip activity={appIcon.activity} />
                 });
             }
         }
