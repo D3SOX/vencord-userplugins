@@ -108,7 +108,7 @@ function getValidStartTimeStamp(activity: Activity): number | null {
 
 const customFormat = (momentObj: moment.Moment): string => {
     const hours = momentObj.hours();
-    const formattedTime = momentObj.format("mm");
+    const formattedTime = momentObj.format("mm:ss");
     return hours > 0 ? `${momentObj.format("HH:")}${formattedTime}` : formattedTime;
 };
 
