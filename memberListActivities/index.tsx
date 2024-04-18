@@ -24,12 +24,12 @@ import ErrorBoundary from "@components/ErrorBoundary";
 import { Devs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
 import { findByPropsLazy, findComponentByCodeLazy, findStoreLazy } from "@webpack";
-import { React,Tooltip, useMemo } from "@webpack/common";
+import { React, Tooltip, useMemo } from "@webpack/common";
 import { User } from "discord-types/general";
-import type { ImgHTMLAttributes } from "react";
 
 import { SpotifyIcon } from "./components/SpotifyIcon";
 import { TwitchIcon } from "./components/TwitchIcon";
+import { Activity, ActivityListIcon, Application, ApplicationIcon, Timestamp } from "./types";
 
 const settings = definePluginSettings({
     iconSize: {
@@ -47,78 +47,7 @@ const settings = definePluginSettings({
     },
 });
 
-interface Timestamp {
-    start?: number;
-    end?: number;
-}
-
-interface Activity {
-    created_at: number;
-    id: string;
-    name: string;
-    type: number;
-    emoji?: {
-        animated: boolean;
-        id: string;
-        name: string;
-    }
-    state?: string;
-    flags?: number;
-    sync_id?: string;
-    details?: string;
-    application_id?: string;
-    assets?: {
-        large_text?: string;
-        large_image?: string;
-        small_text?: string;
-        small_image?: string;
-    };
-    timestamps?: Timestamp;
-    platform?: string;
-}
-
 const cl = classNameFactory("vc-mla-");
-
-interface Application {
-    id: string;
-    name: string;
-    icon: string;
-    description: string;
-    summary: string;
-    type: number;
-    hook: boolean;
-    guild_id: string;
-    executables: Executable[];
-    verify_key: string;
-    publishers: Developer[];
-    developers: Developer[];
-    flags: number;
-}
-
-interface Developer {
-    id: string;
-    name: string;
-}
-
-interface Executable {
-    os: string;
-    name: string;
-    is_launcher: boolean;
-}
-
-interface ApplicationIcon {
-    image: ImgHTMLAttributes<HTMLImageElement> & {
-        src: string;
-        alt: string;
-    };
-    activity: Activity;
-    application?: Application;
-}
-
-interface ActivityListIcon {
-    iconElement: JSX.Element;
-    tooltip?: JSX.Element | string;
-}
 
 const ApplicationStore: {
     getApplication: (id: string) => Application | null;
@@ -189,7 +118,6 @@ const ActivityTooltip = ({ activity }: Readonly<{ activity: Activity }>) => {
         </ErrorBoundary>
     );
 };
-
 
 function getApplicationIcons(activities: Activity[], preferSmall = false) {
     const applicationIcons: ApplicationIcon[] = [];
