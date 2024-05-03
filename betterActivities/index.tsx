@@ -18,7 +18,7 @@
 
 import "./styles.css";
 
-import { definePluginSettings } from "@api/Settings";
+import { definePluginSettings, migratePluginSettings } from "@api/Settings";
 import { classNameFactory } from "@api/Styles";
 import ErrorBoundary from "@components/ErrorBoundary";
 import { Devs } from "@utils/constants";
@@ -266,10 +266,11 @@ function getApplicationIcons(activities: Activity[], preferSmall = false) {
     return applicationIcons;
 }
 
+migratePluginSettings("MemberListActivities", "BetterActivities");
+
 export default definePlugin({
-    // TODO: find a new name that fits the plugin with the new features
-    name: "MemberListActivities",
-    description: "Shows activity icons in the member list",
+    name: "BetterActivities",
+    description: "Shows activity icons in the member list and allows showing all activities",
     authors: [
         Devs.D3SOX,
         {
