@@ -32,6 +32,24 @@ import { TwitchIcon } from "./components/TwitchIcon";
 import { Activity, ActivityListIcon, Application, ApplicationIcon, Timestamp } from "./types";
 
 const settings = definePluginSettings({
+    memberList: {
+        type: OptionType.BOOLEAN,
+        description: "Show activity icons in the member list",
+        default: true,
+        restartNeeded: true,
+    },
+    profileSidebar: {
+        type: OptionType.BOOLEAN,
+        description: "Show all activities in the profile sidebar",
+        default: true,
+        restartNeeded: true,
+    },
+    userPopout: {
+        type: OptionType.BOOLEAN,
+        description: "Show all activities in the user popout",
+        default: true,
+        restartNeeded: true,
+    },
     iconSize: {
         type: OptionType.SLIDER,
         description: "Size of the activity icons",
@@ -345,7 +363,8 @@ export default definePlugin({
             replacement: {
                 match: /null!=(\i)&&\i.some\(\i=>\(0,\i.default\)\(\i,\i\)\)\?/,
                 replace: "$self.patchActivityList(e),false?"
-            }
+            },
+            predicate: () => settings.store.memberList,
         },
         {
             // Show all activities in the profile panel
@@ -366,7 +385,8 @@ export default definePlugin({
                     match: /\i\?\(0,\i.jsx\)\((\i).default.Overlay,{children:\(0,\i.jsx\)\(\i.default,{activity:.{1,15},user:(\i),channelId:(\i).id,/,
                     replace: "...activities.map(activity=>$self.getActivityComponent(activity,$2,$3,$1)),$&"
                 }
-            ]
+            ],
+            predicate: () => settings.store.profileSidebar,
         },
         // TODO: Add user popout patch
     ],
