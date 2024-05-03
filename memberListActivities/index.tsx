@@ -25,7 +25,7 @@ import { Devs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
 import { findByPropsLazy, findComponentByCodeLazy, findStoreLazy } from "@webpack";
 import { moment, React, Tooltip, useMemo } from "@webpack/common";
-import { User } from "discord-types/general";
+import { Channel, User } from "discord-types/general";
 
 import { SpotifyIcon } from "./components/SpotifyIcon";
 import { TwitchIcon } from "./components/TwitchIcon";
@@ -63,6 +63,15 @@ const TimeBar = findComponentByCodeLazy<{
     themed: boolean;
     className: string;
 }>("isSingleLine");
+
+const ActivityComponent = findComponentByCodeLazy<{
+    activity: Activity;
+    application?: Application;
+    user: User;
+    channelId?: string;
+}>("get activity");
+
+type OverlayType = { default: { Overlay: React.ComponentType<{ children?: React.ReactNode; }>; }; }
 
 // if discord one day decides to change their icon this needs to be updated
 const DefaultActivityIcon = findComponentByCodeLazy("M6,7 L2,7 L2,6 L6,6 L6,7 Z M8,5 L2,5 L2,4 L8,4 L8,5 Z M8,3 L2,3 L2,2 L8,2 L8,3 Z M8.88888889,0 L1.11111111,0 C0.494444444,0 0,0.494444444 0,1.11111111 L0,8.88888889 C0,9.50253861 0.497461389,10 1.11111111,10 L8.88888889,10 C9.50253861,10 10,9.50253861 10,8.88888889 L10,1.11111111 C10,0.494444444 9.5,0 8.88888889,0 Z");
@@ -240,6 +249,7 @@ function getApplicationIcons(activities: Activity[], preferSmall = false) {
 }
 
 export default definePlugin({
+    // TODO: find a new name that fits the plugin with the new features
     name: "MemberListActivities",
     description: "Shows activity icons in the member list",
     authors: [
@@ -320,6 +330,14 @@ export default definePlugin({
         return null;
     },
 
+    getActivityComponent: (activity: Activity, user: User, channel: Channel, overlay: OverlayType): JSX.Element | null => {
+        console.log("getActivityComponent", activity, user, channel);
+        const OverlayComponent: React.ComponentType<React.PropsWithChildren> = overlay.default.Overlay;
+        return <OverlayComponent>
+            <ActivityComponent activity={activity} user={user} channelId={channel.id}/>
+        </OverlayComponent>;
+    },
+
     patches: [
         {
             // Patch activity icons
@@ -329,5 +347,27 @@ export default definePlugin({
                 replace: "$self.patchActivityList(e),false?"
             }
         },
+        {
+            // Show all activities in the profile panel
+            find: "Profile Panel: user cannot be undefined",
+            replacement: [
+                {
+                    // destructure activities from store
+                    match: /\{activity:\i,/,
+                    replace: "$&activities,"
+                },
+                {
+                    // get all activities
+                    match: /activity:(\i).default.findActivity\((\i)\.id/,
+                    replace: "activities:$1.default.getActivities($2.id),$&"
+                },
+                {
+                    // show all activities
+                    match: /\i\?\(0,\i.jsx\)\((\i).default.Overlay,{children:\(0,\i.jsx\)\(\i.default,{activity:.{1,15},user:(\i),channelId:(\i).id,/,
+                    replace: "...activities.map(activity=>$self.getActivityComponent(activity,$2,$3,$1)),$&"
+                }
+            ]
+        },
+        // TODO: Add user popout patch
     ],
 });
