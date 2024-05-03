@@ -117,7 +117,7 @@ function formatElapsedTime(startTime: moment.Moment, endTime: moment.Moment): st
     return `${customFormat(moment.utc(duration.asMilliseconds()))} elapsed`;
 }
 
-const ActivityTooltip = ({ activity, application }: Readonly<{ activity: Activity, application?: Application }>) => {
+const ActivityTooltip = ({ activity, application, user }: Readonly<{ activity: Activity, application?: Application, user: User }>) => {
     const image = useMemo(() => {
         const activityImage = getActivityImage(activity, application);
         if (activityImage) {
@@ -260,14 +260,14 @@ export default definePlugin({
         if (spotifyActivity) {
             icons.push({
                 iconElement: <SpotifyIcon />,
-                tooltip: <ActivityTooltip activity={spotifyActivity} />
+                tooltip: <ActivityTooltip activity={spotifyActivity} user={user} />
             });
         }
         const twitchActivity = activities.find(({ name }) => name === "Twitch");
         if (twitchActivity) {
             icons.push({
                 iconElement: <TwitchIcon />,
-                tooltip: <ActivityTooltip activity={twitchActivity} />
+                tooltip: <ActivityTooltip activity={twitchActivity} user={user} />
             });
         }
 
@@ -282,7 +282,7 @@ export default definePlugin({
             for (const appIcon of uniqueIcons) {
                 icons.push({
                     iconElement: <img {...appIcon.image} />,
-                    tooltip: <ActivityTooltip activity={appIcon.activity} application={appIcon.application} />
+                    tooltip: <ActivityTooltip activity={appIcon.activity} application={appIcon.application} user={user} />
                 });
             }
         }
