@@ -17,8 +17,8 @@ Adds a follow option in the user context menu to always be in the same VC as the
 😒 [**IgnoreTerms**](./ignoreTerms)  
 Ignore Discord's new terms of service
 
-🎡 [**MemberListActivities**](./memberListActivities)  
-Shows activity icons in the member list
+🎡 [**BetterActivities**](./betterActivities)  
+Shows activity icons in the member list and allows showing all activities
 
 🔔 [**NotifyUserChanges**](./notifyUserChanges)  
 Adds a notify option in the user context menu to get notified when a user changes voice channels or online status

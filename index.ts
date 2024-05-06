@@ -17,7 +17,7 @@ const PLUGINS = [
     require("./d3soxUpdater").default,
     require("./followUser").default,
     require("./ignoreTerms").default,
-    require("./memberListActivities").default,
+    require("./betterActivities").default,
     require("./notifyUserChanges").default,
     require("./screenShareStreamerMode").default,
     require("./serverProfilesToolbox").default,
