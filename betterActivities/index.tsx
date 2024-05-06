@@ -453,6 +453,7 @@ export default definePlugin({
             predicate: () => settings.store.profileSidebar,
         },
         {
+            // Show all activities in the user popout
             find: "customStatusSection,",
             replacement: {
                 match: /(?<=\(0,\i\.jsx\)\()\i\.\i(?=,{activity:\i,user:\i,guild:\i,channelId:\i,onClose:\i,)/,
