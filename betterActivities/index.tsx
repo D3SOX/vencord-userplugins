@@ -68,7 +68,7 @@ const settings = definePluginSettings({
     },
 });
 
-const cl = classNameFactory("vc-mla-");
+const cl = classNameFactory("vc-bactivities-");
 
 const ApplicationStore: {
     getApplication: (id: string) => Application | null;
