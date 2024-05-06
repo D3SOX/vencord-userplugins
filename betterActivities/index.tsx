@@ -23,13 +23,16 @@ import { classNameFactory } from "@api/Styles";
 import ErrorBoundary from "@components/ErrorBoundary";
 import { Devs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
-import { findByPropsLazy, findComponentByCodeLazy, findStoreLazy } from "@webpack";
-import { moment, React, Tooltip, useMemo } from "@webpack/common";
-import { Channel, User } from "discord-types/general";
+import { findByCodeLazy, findByPropsLazy, findComponentByCodeLazy, findStoreLazy } from "@webpack";
+import { moment, PresenceStore, React, Tooltip, useMemo, useStateFromStores } from "@webpack/common";
+import { Channel, Guild, User } from "discord-types/general";
 
+import { Caret } from "./components/Caret";
 import { SpotifyIcon } from "./components/SpotifyIcon";
 import { TwitchIcon } from "./components/TwitchIcon";
 import { Activity, ActivityListIcon, Application, ApplicationIcon, Timestamp } from "./types";
+
+const ActivityView = findByCodeLazy("onOpenGameProfile:");
 
 const settings = definePluginSettings({
     memberList: {
@@ -89,7 +92,7 @@ const ActivityComponent = findComponentByCodeLazy<{
     channelId?: string;
 }>("get activity");
 
-type OverlayType = { default: { Overlay: React.ComponentType<{ children?: React.ReactNode; }>; }; }
+type OverlayType = { default: { Overlay: React.ComponentType<{ children?: React.ReactNode; }>; }; };
 
 // if discord one day decides to change their icon this needs to be updated
 const DefaultActivityIcon = findComponentByCodeLazy("M6,7 L2,7 L2,6 L6,6 L6,7 Z M8,5 L2,5 L2,4 L8,4 L8,5 Z M8,3 L2,3 L2,2 L8,2 L8,3 Z M8.88888889,0 L1.11111111,0 C0.494444444,0 0,0.494444444 0,1.11111111 L0,8.88888889 C0,9.50253861 0.497461389,10 1.11111111,10 L8.88888889,10 C9.50253861,10 10,9.50253861 10,8.88888889 L10,1.11111111 C10,0.494444444 9.5,0 8.88888889,0 Z");
@@ -144,7 +147,7 @@ function formatElapsedTime(startTime: moment.Moment, endTime: moment.Moment): st
     return `${customFormat(moment.utc(duration.asMilliseconds()))} elapsed`;
 }
 
-const ActivityTooltip = ({ activity, application, user }: Readonly<{ activity: Activity, application?: Application, user: User }>) => {
+const ActivityTooltip = ({ activity, application, user }: Readonly<{ activity: Activity, application?: Application, user: User; }>) => {
     const image = useMemo(() => {
         const activityImage = getActivityImage(activity, application);
         if (activityImage) {
@@ -172,7 +175,7 @@ const ActivityTooltip = ({ activity, application, user }: Readonly<{ activity: A
                         </div>
                     }
                 </div>
-                {timestamps && <TimeBar start={timestamps.start} end={timestamps.end} themed={false} className={cl("activity-time-bar")}/> }
+                {timestamps && <TimeBar start={timestamps.start} end={timestamps.end} themed={false} className={cl("activity-time-bar")} />}
             </div>
         </ErrorBoundary>
     );
@@ -277,12 +280,14 @@ export default definePlugin({
             name: "dropped#0001",
             id: 328165170536775680n,
         },
+        Devs.Arjix,
+        Devs.AutumnVN
     ],
     tags: ["activity"],
 
     settings,
 
-    patchActivityList: ({ activities, user }: { activities: Activity[], user: User }): JSX.Element | null => {
+    patchActivityList: ({ activities, user }: { activities: Activity[], user: User; }): JSX.Element | null => {
         const icons: ActivityListIcon[] = [];
 
         const spotifyActivity = activities.find(({ name }) => name === "Spotify");
@@ -353,8 +358,95 @@ export default definePlugin({
         console.log("getActivityComponent", activity, user, channel);
         const OverlayComponent: React.ComponentType<React.PropsWithChildren> = overlay.default.Overlay;
         return <OverlayComponent>
-            <ActivityComponent activity={activity} user={user} channelId={channel.id}/>
+            <ActivityComponent activity={activity} user={user} channelId={channel.id} />
         </OverlayComponent>;
+    },
+
+    showAllActivitiesComponent({ activity, user, guild, channelId, onClose }: { activity: Activity; user: User, guild: Guild, channelId: string, onClose: () => void; }) {
+        const [currentActivity, setCurrentActivity] = React.useState<Activity | null>(
+            activity?.type !== 4 ? activity! : null
+        );
+
+        const activities = useStateFromStores<Activity[]>(
+            [PresenceStore], () => PresenceStore.getActivities(user.id).filter((activity: Activity) => activity.type !== 4)
+        ) ?? [];
+
+        React.useEffect(() => {
+            if (!activities.length) {
+                setCurrentActivity(null);
+                return;
+            }
+
+            if (!currentActivity || !activities.includes(currentActivity))
+                setCurrentActivity(activities[0]);
+
+        }, [activities]);
+
+        if (!activities.length) return null;
+
+        return (
+            <div style={{ display: "flex", flexDirection: "column" }}>
+                <ActivityView
+                    activity={currentActivity}
+                    user={user}
+                    guild={guild}
+                    channelId={channelId}
+                    onClose={onClose}
+                />
+                <div
+                    className={cl("controls")}
+                    style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                    }}
+                >
+                    <Tooltip text="Left" tooltipClassName={cl("controls-tooltip")}>{({ onMouseEnter, onMouseLeave }) => {
+                        return <span
+                            onMouseEnter={onMouseEnter}
+                            onMouseLeave={onMouseLeave}
+                            onClick={() => {
+                                const index = activities.indexOf(currentActivity!);
+                                if (index - 1 >= 0)
+                                    setCurrentActivity(activities[index - 1]);
+                            }}
+                        >
+                            <Caret
+                                disabled={activities.indexOf(currentActivity!) < 1}
+                                direction="left"
+                            />
+                        </span>;
+                    }}</Tooltip>
+
+                    <div className="carousell">
+                        {activities.map((activity, index) => (
+                            <div
+                                key={"dot--" + index}
+                                onClick={() => setCurrentActivity(activity)}
+                                className={`dot ${currentActivity === activity ? "selected" : ""}`}
+                            />
+                        ))}
+                    </div>
+
+                    <Tooltip text="Right" tooltipClassName={cl("controls-tooltip")}>{({ onMouseEnter, onMouseLeave }) => {
+                        return <span
+                            onMouseEnter={onMouseEnter}
+                            onMouseLeave={onMouseLeave}
+                            onClick={() => {
+                                const index = activities.indexOf(currentActivity!);
+                                if (index + 1 < activities.length)
+                                    setCurrentActivity(activities[index + 1]);
+                            }}
+                        >
+                            <Caret
+                                disabled={activities.indexOf(currentActivity!) >= activities.length - 1}
+                                direction="right"
+                            />
+                        </span>;
+                    }}</Tooltip>
+                </div>
+            </div>
+        );
     },
 
     patches: [
@@ -370,25 +462,19 @@ export default definePlugin({
         {
             // Show all activities in the profile panel
             find: "Profile Panel: user cannot be undefined",
-            replacement: [
-                {
-                    // destructure activities from store
-                    match: /\{activity:\i,/,
-                    replace: "$&activities,"
-                },
-                {
-                    // get all activities
-                    match: /activity:(\i).default.findActivity\((\i)\.id/,
-                    replace: "activities:$1.default.getActivities($2.id),$&"
-                },
-                {
-                    // show all activities
-                    match: /\i\?\(0,\i.jsx\)\((\i).default.Overlay,{children:\(0,\i.jsx\)\(\i.default,{activity:.{1,15},user:(\i),channelId:(\i).id,/,
-                    replace: "...activities.map(activity=>$self.getActivityComponent(activity,$2,$3,$1)),$&"
-                }
-            ],
+            replacement: {
+                match: /(?<=\(0,\i\.jsx\)\()\i\.\i(?=,{activity:.+?,user:\i,channelId:\i.id,)/,
+                replace: "$self.showAllActivitiesComponent"
+            },
             predicate: () => settings.store.profileSidebar,
         },
-        // TODO: Add user popout patch
+        {
+            find: "customStatusSection,",
+            replacement: {
+                match: /(?<=\(0,\i\.jsx\)\()\i\.\i(?=,{activity:\i,user:\i,guild:\i,channelId:\i,onClose:\i,)/,
+                replace: "$self.showAllActivitiesComponent"
+            },
+            predicate: () => settings.store.userPopout
+        }
     ],
 });

@@ -13,8 +13,8 @@
 }
 
 .vc-mla-icon img {
-    width: 100%;
-    height: 100%;
+    width: 20px;
+    height: 20px;
     object-fit: cover;
     border-radius: 50%;
 }
@@ -57,4 +57,75 @@
     width: 100%;
     margin-top: 3px;
     margin-bottom: 3px;
+}
+
+.vc-mla-caret-left,
+.vc-mla-caret-right {
+    color: #ddd;
+}
+
+.vc-mla-caret-left {
+    transform: rotate(90deg);
+}
+
+.vc-mla-caret-right {
+    transform: rotate(-90deg);
+}
+
+.vc-mla-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+    background: var(--background-secondary-alt);
+    border-radius: 3px;
+    flex: 1 0;
+    margin-top: 10px;
+}
+
+.vc-mla-controls [class^="vc-activities-caret-"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 3px;
+    background-color: #ffffff4d;
+}
+
+.vc-mla-controls [class^="vc-activities-caret-"].disabled {
+    cursor: not-allowed;
+    opacity: 0.3;
+}
+
+.vc-mla-controls [class^="vc-activities-caret-"]:hover:not(.disabled) {
+    background: var(--background-modifier-accent);
+}
+
+.vc-mla-controls .carousell {
+    display: flex;
+    align-items: center;
+}
+
+.vc-mla-controls .carousell .dot {
+    margin: 0 4px;
+    width: 10px;
+    cursor: pointer;
+    height: 10px;
+    border-radius: 100px;
+    background: var(--interactive-muted);
+    transition: background 0.3s;
+    opacity: 0.6;
+}
+
+.vc-mla-controls .carousell .dot:hover:not(.selected) {
+    opacity: 1;
+}
+
+.vc-mla-controls .carousell .dot.selected {
+    opacity: 1;
+    background: var(--dot-color, var(--brand-experiment));
+}
+
+.vc-mla-controls-tooltip {
+    --background-floating: var(--background-secondary);
 }
