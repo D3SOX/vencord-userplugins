@@ -25,12 +25,12 @@ import { Devs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
 import { findByCodeLazy, findByPropsLazy, findComponentByCodeLazy, findStoreLazy } from "@webpack";
 import { moment, PresenceStore, React, Tooltip, useMemo, useStateFromStores } from "@webpack/common";
-import { Channel, Guild, User } from "discord-types/general";
+import { Guild, User } from "discord-types/general";
 
 import { Caret } from "./components/Caret";
 import { SpotifyIcon } from "./components/SpotifyIcon";
 import { TwitchIcon } from "./components/TwitchIcon";
-import { Activity, ActivityListIcon, Application, ApplicationIcon, Timestamp } from "./types";
+import { Activity, ActivityListIcon, Application, ApplicationIcon, IconCSSProperties, Timestamp } from "./types";
 
 const ActivityView = findByCodeLazy("onOpenGameProfile:");
 
@@ -313,13 +313,14 @@ export default definePlugin({
         }
 
         if (icons.length) {
+            const iconStyle: IconCSSProperties = {
+                "--icon-size": `${settings.store.iconSize}px`,
+            };
+
             return <ErrorBoundary noop>
                 <div className={cl("row")}>
                     {icons.map(({ iconElement, tooltip }, i) => (
-                        <div key={i} className={cl("icon")} style={{
-                            width: `${settings.store.iconSize}px`,
-                            height: `${settings.store.iconSize}px`
-                        }}>
+                        <div key={i} className={cl("icon")} style={iconStyle}>
                             {tooltip ? <Tooltip text={tooltip}>
                                 {({ onMouseEnter, onMouseLeave }) => (
                                     <div
