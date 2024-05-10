@@ -66,8 +66,8 @@ const settings = definePluginSettings({
                 width: "100%",
                 height: 1,
                 borderTop: "thin solid var(--background-modifier-accent)",
-                marginTop: 5,
-                marginBottom: 5
+                paddingTop: 5,
+                paddingBottom: 5
             }}/>
         ),
     },
