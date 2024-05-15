@@ -13,8 +13,8 @@ import type { Channel } from "discord-types/general";
 
 const VoiceStateStore = findStoreLazy("VoiceStateStore");
 
-async function runSequential(promises: Promise<any>[]): Promise<any[]> {
-    const results: any[] = [];
+async function runSequential<T>(promises: Promise<T>[]): Promise<T[]> {
+    const results: T[] = [];
     for (const promise of promises) {
         const result = await promise;
         results.push(result);
