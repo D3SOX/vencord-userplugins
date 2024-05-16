@@ -8,6 +8,9 @@
 These are all my Vencord plugins that are not yet in the [official Vencord repository](https://vencord.dev/plugins#d3sox). Some of them have [pending PRs](https://github.com/Vendicated/Vencord/pulls/d3sox).
 See the plugin folders for screenshots
 
+🎡 [**BetterActivities**](./betterActivities)  
+Shows activity icons in the member list and allows showing all activities
+
 🔇 [**BlockKrisp**](./blockKrisp.discordDesktop)  
 Prevent Krisp from loading
 
@@ -17,8 +20,8 @@ Adds a follow option in the user context menu to always be in the same VC as the
 😒 [**IgnoreTerms**](./ignoreTerms)  
 Ignore Discord's new terms of service
 
-🎡 [**BetterActivities**](./betterActivities)  
-Shows activity icons in the member list and allows showing all activities
+🔕 [**NoDefaultHangStatus**](./noDefaultHangStatus)  
+Disable the default hang status when joining voice channels
 
 🔔 [**NotifyUserChanges**](./notifyUserChanges)  
 Adds a notify option in the user context menu to get notified when a user changes voice channels or online status
