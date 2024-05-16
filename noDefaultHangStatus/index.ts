@@ -5,7 +5,7 @@
  */
 
 import { Devs } from "@utils/constants";
-import definePlugin from "@utils/types";
+import definePlugin, { PluginDef } from "@utils/types";
 import { FluxDispatcher } from "@webpack/common";
 
 export default definePlugin({
@@ -20,4 +20,5 @@ export default definePlugin({
             }
         },
     }
-});
+// Hack to avoid having to extend the type here because I don't know how
+} as PluginDef);
