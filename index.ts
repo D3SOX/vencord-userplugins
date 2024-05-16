@@ -14,10 +14,11 @@ export const Native = getNative();
 import Plugins from "~plugins";
 
 const PLUGINS = [
+    require("./betterActivities").default,
     require("./d3soxUpdater").default,
     require("./followUser").default,
     require("./ignoreTerms").default,
-    require("./betterActivities").default,
+    require("./noDefaultHangStatus").default,
     require("./notifyUserChanges").default,
     require("./screenShareStreamerMode").default,
     require("./serverProfilesToolbox").default,
