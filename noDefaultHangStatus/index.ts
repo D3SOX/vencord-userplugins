@@ -7,12 +7,20 @@
 import { Devs } from "@utils/constants";
 import definePlugin, { PluginDef } from "@utils/types";
 import { FluxDispatcher } from "@webpack/common";
+import { FluxEvents } from "@webpack/types";
 
 type MyPluginDef = PluginDef & {
     flux: {
         UPDATE_HANG_STATUS: ({ status, saveAsDefault }: { status: string, saveAsDefault?: boolean }) => void;
     };
 };
+
+type ExtendedFluxDispatcherType = typeof FluxDispatcher & {
+    // Extend the dispatch method to accept the extended event types
+    dispatch(event: { [key: string]: unknown; type: FluxEvents | "CLEAR_HANG_STATUS"; }): Promise<void>;
+}
+
+const ExtendedFluxDispatcher = FluxDispatcher as unknown as ExtendedFluxDispatcherType;
 
 export default definePlugin({
     name: "NoDefaultHangStatus",
@@ -22,7 +30,7 @@ export default definePlugin({
     flux: {
         UPDATE_HANG_STATUS: ({ status, saveAsDefault }) => {
             if (saveAsDefault === undefined && status) {
-                FluxDispatcher.dispatch({ type: "CLEAR_HANG_STATUS" });
+                ExtendedFluxDispatcher.dispatch({ type: "CLEAR_HANG_STATUS" });
             }
         },
     }
