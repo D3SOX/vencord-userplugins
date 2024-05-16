@@ -6,20 +6,19 @@
 
 import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
-import { FluxDispatcher } from "@webpack/common";
 
-// @ts-ignore
 export default definePlugin({
     name: "NoDefaultHangStatus",
     description: "Disable the default hang status when joining voice channels",
     authors: [Devs.D3SOX],
 
-    flux: {
-        UPDATE_HANG_STATUS: ({ status, saveAsDefault }) => {
-            if (saveAsDefault === undefined && status) {
-                // @ts-ignore
-                FluxDispatcher.dispatch({ type: "CLEAR_HANG_STATUS" });
+    patches: [
+        {
+            find: "updateHangStatus:function",
+            replacement: {
+                match: /(?<=function \i\((\i),(\i)\)\{var \i;)if\(null==\i\)/,
+                replace: "if(null==$1||$2===undefined)"
             }
-        },
-    }
+        }
+    ]
 });
