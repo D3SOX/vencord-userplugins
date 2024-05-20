@@ -18,7 +18,6 @@ const PLUGINS = [
     require("./d3soxUpdater").default,
     require("./followUser").default,
     require("./ignoreTerms").default,
-    require("./noDefaultHangStatus").default,
     require("./notifyUserChanges").default,
     require("./screenShareStreamerMode").default,
     require("./serverProfilesToolbox").default,
