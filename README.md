@@ -20,9 +20,6 @@ Adds a follow option in the user context menu to always be in the same VC as the
 😒 [**IgnoreTerms**](./ignoreTerms)  
 Ignore Discord's new terms of service
 
-🔕 [**NoDefaultHangStatus**](./noDefaultHangStatus)  
-Disable the default hang status when joining voice channels
-
 🔔 [**NotifyUserChanges**](./notifyUserChanges)  
 Adds a notify option in the user context menu to get notified when a user changes voice channels or online status
 
