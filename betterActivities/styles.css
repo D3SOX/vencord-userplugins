@@ -7,12 +7,6 @@
     gap: 3px;
 }
 
-.vc-bactivities-disabled {
-    color: dimgray !important;
-    background: dimgray !important;
-    cursor: not-allowed !important;
-}
-
 .vc-bactivities-icon {
     height: var(--icon-size);
     width: var(--icon-size);
