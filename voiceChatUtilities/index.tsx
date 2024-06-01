@@ -152,7 +152,7 @@ const settings = definePluginSettings({
         type: OptionType.SLIDER,
         description: "Time to wait between each action (in seconds)",
         default: 2,
-        markers: makeRange(1, 10),
+        markers: makeRange(1, 10, .5),
     }
 });
 
