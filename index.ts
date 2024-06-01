@@ -15,6 +15,7 @@ import Plugins from "~plugins";
 
 const PLUGINS = [
     require("./betterActivities").default,
+    require("./blockKrisp").default,
     require("./d3soxUpdater").default,
     require("./followUser").default,
     require("./ignoreTerms").default,
@@ -25,9 +26,6 @@ const PLUGINS = [
     require("./voiceChatUtilities").default,
 ];
 
-if (IS_DISCORD_DESKTOP) {
-    PLUGINS.push(require("./blockKrisp.discordDesktop").default);
-}
 
 for(const plugin of PLUGINS) {
     (plugin.tags ??= []).push("D3SOX");

@@ -11,7 +11,7 @@ See the plugin folders for screenshots
 🎡 [**BetterActivities**](./betterActivities)  
 Shows activity icons in the member list and allows showing all activities
 
-🔇 [**BlockKrisp**](./blockKrisp.discordDesktop)  
+🔇 [**BlockKrisp**](./blockKrisp)  
 Prevent Krisp from loading
 
 🤝 [**FollowUser**](./followUser)  
