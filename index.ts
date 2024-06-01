@@ -14,6 +14,7 @@ export const Native = getNative();
 import Plugins from "~plugins";
 
 const PLUGINS = [
+    require("./audioPlaybackSpeed").default,
     require("./betterActivities").default,
     require("./blockKrisp").default,
     require("./d3soxUpdater").default,

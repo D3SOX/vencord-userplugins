@@ -8,6 +8,9 @@
 These are all my Vencord plugins that are not yet in the [official Vencord repository](https://vencord.dev/plugins#d3sox). Some of them have [pending PRs](https://github.com/Vendicated/Vencord/pulls/d3sox).
 See the plugin folders for screenshots
 
+⏩ [**AudioPlaybackSpeed**](./audioPlaybackSpeed)  
+Adds an icon to change the playback speed of voice message and audio embeds
+
 🎡 [**BetterActivities**](./betterActivities)  
 Shows activity icons in the member list and allows showing all activities
 
