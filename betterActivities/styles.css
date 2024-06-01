@@ -129,7 +129,7 @@
 
 .vc-bactivities-controls .carousell .dot.selected {
     opacity: 1;
-    background: var(--dot-color, var(--brand-experiment));
+    background: var(--dot-color, var(--brand-500));
 }
 
 .vc-bactivities-controls-tooltip {
