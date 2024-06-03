@@ -8,9 +8,6 @@
 These are all my Vencord plugins that are not yet in the [official Vencord repository](https://vencord.dev/plugins#d3sox). Some of them have [pending PRs](https://github.com/Vendicated/Vencord/pulls/d3sox).
 See the plugin folders for screenshots
 
-⏩ [**AudioPlaybackSpeed**](./audioPlaybackSpeed)  
-Adds an icon to change the playback speed of voice message and audio embeds
-
 🎡 [**BetterActivities**](./betterActivities)  
 Shows activity icons in the member list and allows showing all activities
 
@@ -22,6 +19,9 @@ Adds a follow option in the user context menu to always be in the same VC as the
 
 😒 [**IgnoreTerms**](./ignoreTerms)  
 Ignore Discord's new terms of service
+
+⏩ [**MediaPlaybackSpeed**](./mediaPlaybackSpeed)  
+Adds an icon to change the playback speed of media embeds
 
 🔔 [**NotifyUserChanges**](./notifyUserChanges)  
 Adds a notify option in the user context menu to get notified when a user changes voice channels or online status
