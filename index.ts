@@ -14,14 +14,13 @@ export const Native = getNative();
 import Plugins from "~plugins";
 
 const PLUGINS = [
-    require("./mediaPlaybackSpeed").default,
     require("./betterActivities").default,
     require("./blockKrisp").default,
     require("./d3soxUpdater").default,
     require("./followUser").default,
     require("./ignoreTerms").default,
+    require("./mediaPlaybackSpeed").default,
     require("./notifyUserChanges").default,
-    require("./screenShareStreamerMode").default,
     require("./serverProfilesToolbox").default,
     require("./silentTyping").default,
     require("./voiceChatUtilities").default,
