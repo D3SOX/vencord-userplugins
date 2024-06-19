@@ -7,6 +7,7 @@
 import "./styles.css";
 
 import { classNameFactory } from "@api/Styles";
+import ErrorBoundary from "@components/ErrorBoundary";
 import { makeRange } from "@components/PluginSettings/components";
 import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
@@ -24,56 +25,57 @@ export default definePlugin({
     description: "Adds an icon to change the playback speed of media embeds",
     authors: [Devs.D3SOX],
 
-    playbackSpeedComponent(mediaRef: RefObject<HTMLMediaElement>) {
+    playbackSpeedComponent(mediaRef: RefObject<HTMLMediaElement> | undefined) {
         const changeSpeed = (speed: number) => {
-            const media = mediaRef.current;
+            const media = mediaRef?.current;
             if (media) {
                 media.playbackRate = speed;
             }
         };
 
         return (
-            <Tooltip text="Playback speed">
-                {({ onMouseEnter, onMouseLeave }) => (
-                    <button
-                        className={cl("icon")}
-                        onMouseEnter={onMouseEnter}
-                        onMouseLeave={onMouseLeave}
-                        onClick={e => {
-                            ContextMenuApi.openContextMenu(e, () =>
-                                <Menu.Menu
-                                    navId="playback-speed"
-                                    onClose={() => FluxDispatcher.dispatch({ type: "CONTEXT_MENU_CLOSE" })}
-                                    aria-label="Playback speed control"
-                                >
-                                    <Menu.MenuGroup
-                                        label="Playback speed"
+            <ErrorBoundary noop>
+                <Tooltip text="Playback speed">
+                    {tooltipProps => (
+                        <button
+                            {...tooltipProps}
+                            className={cl("icon")}
+                            onClick={e => {
+                                ContextMenuApi.openContextMenu(e, () =>
+                                    <Menu.Menu
+                                        navId="vc-playback-speed"
+                                        onClose={() => FluxDispatcher.dispatch({ type: "CONTEXT_MENU_CLOSE" })}
+                                        aria-label="Playback speed control"
                                     >
-                                        {speeds.map(speed => (
-                                            <Menu.MenuItem
-                                                key={speed}
-                                                id={"speed-" + speed}
-                                                label={`${speed}x`}
-                                                action={() => changeSpeed(speed)}
-                                            />
-                                        ))}
-                                    </Menu.MenuGroup>
-                                </Menu.Menu>
-                            );
-                        }}>
-                        <SpeedIcon/>
-                    </button>
-                )}
-            </Tooltip>
+                                        <Menu.MenuGroup
+                                            label="Playback speed"
+                                        >
+                                            {speeds.map(speed => (
+                                                <Menu.MenuItem
+                                                    key={speed}
+                                                    id={"speed-" + speed}
+                                                    label={`${speed}x`}
+                                                    action={() => changeSpeed(speed)}
+                                                />
+                                            ))}
+                                        </Menu.MenuGroup>
+                                    </Menu.Menu>
+                                );
+                            }}>
+                            <SpeedIcon/>
+                        </button>
+                    )}
+                </Tooltip>
+            </ErrorBoundary>
         );
     },
 
     patches: [
         // voice message embeds
         {
-            find: "ComponentActions.VOICE_MESSAGE_PLAYBACK_STARTED",
+            find: "--:--",
             replacement: {
-                match: /useCallback\(\(\)=>\{let \i=(\i).current;.{2300,3000}onVolumeShow:\i,onVolumeHide:\i\}\)/,
+                match: /onVolumeShow:\i,onVolumeHide:\i\}\)(?<=useCallback\(\(\)=>\{let \i=(\i).current;.+?)/,
                 replace: "$&,$self.playbackSpeedComponent($1)"
             }
         },
