@@ -300,7 +300,7 @@ function getApplicationIcons(activities: Activity[], preferSmall = false) {
     return applicationIcons;
 }
 
-migratePluginSettings("MemberListActivities", "BetterActivities");
+migratePluginSettings("BetterActivities", "MemberListActivities");
 
 export default definePlugin({
     name: "BetterActivities",
