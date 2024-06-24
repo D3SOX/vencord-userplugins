@@ -4,19 +4,19 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { getNative } from "./shared/native";
+//import { getNative } from "./shared/native";
 
 // needs to stay here to notify users of the old version
 export const VERSION = "2.0.0";
 
-export const Native = getNative();
+//export const Native = getNative();
 
 import Plugins from "~plugins";
 
 const PLUGINS = [
     require("./betterActivities").default,
     require("./blockKrisp").default,
-    require("./d3soxUpdater").default,
+    //require("./d3soxUpdater").default,
     require("./followUser").default,
     require("./ignoreTerms").default,
     require("./mediaPlaybackSpeed").default,
