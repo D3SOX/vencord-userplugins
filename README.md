@@ -41,7 +41,7 @@ Allows you to perform multiple actions on an entire channel (move, mute, disconn
 
 # Install
 
-If you don't know how to install userplugins in the first place please see the manual [Vencord installation guide](https://github.com/Vendicated/Vencord/blob/main/docs/1_INSTALLING.md). If using Vesktop specify the location in Vesktop settings instead of running `pnpm inject`
+If you don't know how to install userplugins in the first place please see the manual [Vencord installation guide](https://docs.vencord.dev/installing/). If using Vesktop specify the location in Vesktop settings instead of running `pnpm inject`
 
 > [!TIP]
 > There's also [this video by Syncxv](https://youtu.be/8wexjSo8fNw) which shows how to install a userplugin on Windows.  
