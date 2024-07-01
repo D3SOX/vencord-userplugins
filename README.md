@@ -3,7 +3,7 @@
 
 > [!WARNING]
 > This repo is no longer supported as Vencord broke the way to have multiple plugins in one repo and doesn't want to provide one  
-> and I don't want take the burder of maintaining a repo for each plugin.
+> And I don't want take the burder of maintaining a repo for each plugin.n
 > 
 > Therefore I will only continue maintaining [my branch of Vencord](https://github.com/D3SOX/Vencord) where the plugins reside in [`src/plugins-extra`](https://github.com/D3SOX/Vencord/tree/mybuild/src/plugins-extra).  
 > If you download them manually you won't get any updates and have to redownload them every time I change something  
