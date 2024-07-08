@@ -1,13 +1,17 @@
-# UNSUPPORTED
-
+# WARNING
 
 > [!WARNING]
-> This repo is no longer supported as Vencord broke the way to have multiple plugins in one repo and doesn't want to provide one  
-> And I don't want take the burden of maintaining a repo for each plugin.
+> For now this repo is not supported as Vencord broke the way my repo worked
 > 
-> Therefore I will only continue maintaining [my branch of Vencord](https://github.com/D3SOX/Vencord) where the plugins reside in [`src/plugins-extra`](https://github.com/D3SOX/Vencord/tree/mybuild/src/plugins-extra).  
+> Therefore the current up-to-date source is the [my branch of Vencord](https://github.com/D3SOX/Vencord) where the plugins reside in [`src/plugins-extra`](https://github.com/D3SOX/Vencord/tree/mybuild/src/plugins-extra).  
 > If you download them manually you won't get any updates and have to redownload them every time I change something  
 > So the only way to keep updated is to install my branch. [See instructions](https://github.com/D3SOX/Vencord?tab=readme-ov-file#installing--uninstalling)
+
+# WIP
+
+
+> [!NOTE]
+> This will change as [#40](https://github.com/D3SOX/vencord-userplugins/issues/40) gets implemented. See [the issue](https://github.com/D3SOX/vencord-userplugins/issues/40) for the progress.
 
 ---
 ---
