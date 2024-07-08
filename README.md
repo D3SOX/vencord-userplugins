@@ -1,8 +1,3 @@
-# WIP
-
-> [!NOTE]
-> This way this repo will change as [#40](https://github.com/D3SOX/vencord-userplugins/issues/40) gets implemented. See [the issue](https://github.com/D3SOX/vencord-userplugins/issues/40) for the progress.
-
 <div align="center">
 
 ![Vencord Logo](https://github.com/D3SOX/vencord-userplugins/assets/24937357/f5c06f0e-9d8c-4cca-b990-953d675ec71d)
@@ -13,31 +8,31 @@
 These are all my Vencord plugins that are not yet in the [official Vencord repository](https://vencord.dev/plugins#d3sox). Some of them have [pending PRs](https://github.com/Vendicated/Vencord/pulls/d3sox).
 See the plugin folders for screenshots
 
-🎡 [**BetterActivities**](./betterActivities)  
+🎡 [**BetterActivities**](https://github.com/D3SOX/vc-betterActivites) (`https://github.com/D3SOX/vc-betterActivites`)  
 Shows activity icons in the member list and allows showing all activities
 
-🔇 [**BlockKrisp**](./blockKrisp)  
+🔇 [**BlockKrisp**](https://github.com/D3SOX/vc-blockKrisp) (`https://github.com/D3SOX/vc-blockKrisp`)  
 Prevent Krisp from loading
 
-🤝 [**FollowUser**](./followUser)  
+🤝 [**FollowUser**](https://github.com/D3SOX/vc-followUser) (`https://github.com/D3SOX/vc-followUser`)  
 Adds a follow option in the user context menu to always be in the same VC as them
 
-😒 [**IgnoreTerms**](./ignoreTerms)  
+😒 [**IgnoreTerms**](https://github.com/D3SOX/vc-ignoreTerms) (`https://github.com/D3SOX/vc-ignoreTerms`)  
 Ignore Discord's new terms of service
 
-⏩ [**MediaPlaybackSpeed**](./mediaPlaybackSpeed)  
+⏩ [**MediaPlaybackSpeed**](https://github.com/D3SOX/vc-mediaPlaybackSpeed) (`https://github.com/D3SOX/vc-mediaPlaybackSpeed`)  
 Adds an icon to change the playback speed of media embeds
 
-🔔 [**NotifyUserChanges**](./notifyUserChanges)  
+🔔 [**NotifyUserChanges**](https://github.com/D3SOX/vc-notifyUserChanges) (`https://github.com/D3SOX/vc-notifyUserChanges`)  
 Adds a notify option in the user context menu to get notified when a user changes voice channels or online status
 
-👤 [**ServerProfilesToolbox**](./serverProfilesToolbox)  
+👤 [**ServerProfilesToolbox**](https://github.com/D3SOX/vc-serverProfilesToolbox) (`https://github.com/D3SOX/vc-serverProfilesToolbox`)  
 Adds a copy/paste/reset button to the server profiles editor
 
-🤫 [**SilentTyping**](./silentTyping)  
+🤫 [**SilentTyping**](https://github.com/D3SOX/vc-silentTypingEnhanced) (`https://github.com/D3SOX/vc-silentTypingEnhanced`)  
 Enhanced version of SilentTyping with the feature to disable it for specific guilds or users
 
-🔈 [**VoiceChatUtilities**](./voiceChatUtilities)  
+🔈 [**VoiceChatUtilities**](https://github.com/D3SOX/vc-voiceChatUtilities) (`https://github.com/D3SOX/vc-voiceChatUtilities`)  
 Allows you to perform multiple actions on an entire channel (move, mute, disconnect, etc.)
 
 
@@ -47,31 +42,20 @@ If you don't know how to install userplugins in the first place please see the m
 
 > [!TIP]
 > There's also [this video by Syncxv](https://youtu.be/8wexjSo8fNw) which shows how to install a userplugin on Windows.
+> Just be sure to replace the `git clone` command with the URL from the plugin you like
 
-:warning: **Important:** If you're on Windows you need to use Git Bash for the commands to work. If you installed Git using the Vencord installation guide you should already have it and can open in in a folder with the right click menu.
-
-Clone the repository where you also cloned your Vencord folder (create the `userplugins` folder if it doesn't exist)
+Clone the repository inside your Vencord `src/userplugins` folder (create the `userplugins` folder if it doesn't exist)
 ```bash
-git clone https://github.com/D3SOX/vencord-userplugins D3SOX-userplugins
-cp -r D3SOX-userplugins/* Vencord/src/userplugins
-cd Vencord
+cd Vencord/src/userplugins
+git clone https://github.com/D3SOX/vc-pluginName
 pnpm build
 ````
 
 # Update
 
-:warning: **Important:** If you're on Windows you need to use Git Bash for the commands to work. If you installed Git using the Vencord installation guide you should already have it and can open in in a folder with the right click menu.
-
 To update just pull the latest changes inside the repository folder and sync the changes
 ```bash
-( cd D3SOX-userplugins && git pull )
-rm -rf Vencord/src/userplugins/pluginName
-cp -r D3SOX-userplugins/pluginName Vencord/src/userplugins/
-cd Vencord
+cd Vencord/src/userplugins/vc-pluginName
+git pull
 pnpm build
 ```
-
-# Credits
-
-- [Syncxv](https://github.com/Syncxv) for the updater
-- [Kyuuhachi](https://github.com/Kyuuhachi) for the plugin loader
