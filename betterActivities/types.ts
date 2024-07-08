@@ -20,7 +20,7 @@ export interface Activity {
         animated: boolean;
         id: string;
         name: string;
-    }
+    };
     state?: string;
     flags?: number;
     sync_id?: string;
