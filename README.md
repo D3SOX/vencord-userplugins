@@ -8,7 +8,7 @@
 These are all my Vencord plugins that are not yet in the [official Vencord repository](https://vencord.dev/plugins#d3sox). Some of them have [pending PRs](https://github.com/Vendicated/Vencord/pulls/d3sox).
 See the plugin folders for screenshots
 
-🎡 [**BetterActivities**](https://github.com/D3SOX/vc-betterActivites) (`https://github.com/D3SOX/vc-betterActivites`)  
+🎡 [**BetterActivities**](https://github.com/D3SOX/vc-betterActivities) (`https://github.com/D3SOX/vc-betterActivities`)  
 Shows activity icons in the member list and allows showing all activities
 
 🔇 [**BlockKrisp**](https://github.com/D3SOX/vc-blockKrisp) (`https://github.com/D3SOX/vc-blockKrisp`)  
