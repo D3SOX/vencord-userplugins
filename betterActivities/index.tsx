@@ -105,7 +105,7 @@ const TimeBar = findComponentByCodeLazy<{
     className: string;
 }>("isSingleLine");
 
-enum Types {
+enum ActivityViewType {
     USER_POPOUT = "UserPopout",
     USER_POPOUT_V2 = "UserPopoutV2",
     ACTIVITY_FEED = "ActivityFeed",
@@ -121,7 +121,7 @@ const ActivityView = findComponentByCodeLazy<{
     activity: Activity | null;
     user: User;
     activityGuild: Guild;
-    type: Types;
+    type: ActivityViewType;
     showChannelDetails: boolean;
         }>(",onOpenGameProfileModal:");
 
@@ -387,7 +387,7 @@ export default definePlugin({
         return null;
     },
 
-    showAllActivitiesComponent({ activity, user, guild, channelId, onClose }: Readonly<{ activity: Activity; user: User, guild: Guild, channelId: string, onClose: () => void; }>) {
+    showAllActivitiesComponent({ activity, user, activityGuild }: Readonly<{ activity: Activity; user: User; activityGuild: Guild; }>) {
         const [currentActivity, setCurrentActivity] = React.useState<Activity | null>(
             activity?.type !== 4 ? activity! : null
         );
@@ -412,10 +412,10 @@ export default definePlugin({
             return (
                 <div className={cl("temp-fix")} style={{ display: "flex", flexDirection: "column" }}>
                     <ActivityView
-                        type={Types.SIMPLIFIED_PROFILE}
+                        type={ActivityViewType.USER_POPOUT_V2}
                         activity={currentActivity}
                         user={user}
-                        activityGuild={guild}
+                        activityGuild={activityGuild}
                         showChannelDetails={true}/>
                     <div
                         className={cl("controls")}
@@ -487,10 +487,10 @@ export default definePlugin({
                     {activities.map((activity, index) => (
                         <ActivityView
                             key={index}
-                            type={Types.SIMPLIFIED_PROFILE}
+                            type={ActivityViewType.USER_POPOUT_V2}
                             activity={activity}
                             user={user}
-                            activityGuild={guild}
+                            activityGuild={activityGuild}
                             showChannelDetails={true}
                         />
                     ))}
