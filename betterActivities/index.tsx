@@ -11,32 +11,14 @@ import { classNameFactory } from "@api/Styles";
 import ErrorBoundary from "@components/ErrorBoundary";
 import { Devs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
-import {
-    findByPropsLazy,
-    findComponentByCodeLazy,
-    findStoreLazy,
-} from "@webpack";
-import {
-    moment,
-    PresenceStore,
-    React,
-    Tooltip,
-    useMemo,
-    useStateFromStores,
-} from "@webpack/common";
+import { findByPropsLazy, findComponentByCodeLazy, findStoreLazy } from "@webpack";
+import { moment, PresenceStore, React, Tooltip, useMemo, useStateFromStores } from "@webpack/common";
 import { Guild, User } from "discord-types/general";
 
 import { Caret } from "./components/Caret";
 import { SpotifyIcon } from "./components/SpotifyIcon";
 import { TwitchIcon } from "./components/TwitchIcon";
-import {
-    Activity,
-    ActivityListIcon,
-    Application,
-    ApplicationIcon,
-    IconCSSProperties,
-    Timestamp,
-} from "./types";
+import { Activity, ActivityListIcon, Application, ApplicationIcon, IconCSSProperties, Timestamp } from "./types";
 
 const settings = definePluginSettings({
     memberList: {
@@ -74,15 +56,13 @@ const settings = definePluginSettings({
         type: OptionType.COMPONENT,
         description: "",
         component: () => (
-            <div
-                style={{
-                    width: "100%",
-                    height: 1,
-                    borderTop: "thin solid var(--background-modifier-accent)",
-                    paddingTop: 5,
-                    paddingBottom: 5,
-                }}
-            />
+            <div style={{
+                width: "100%",
+                height: 1,
+                borderTop: "thin solid var(--background-modifier-accent)",
+                paddingTop: 5,
+                paddingBottom: 5
+            }}/>
         ),
     },
     userPopout: {
@@ -104,52 +84,57 @@ const settings = definePluginSettings({
                 label: "List",
                 value: "list",
             },
-        ],
-    },
+        ]
+    }
 });
 
 const cl = classNameFactory("vc-bactivities-");
 
 const ApplicationStore: {
-  getApplication: (id: string) => Application | null;
+    getApplication: (id: string) => Application | null;
 } = findStoreLazy("ApplicationStore");
 
-const {
-    fetchApplication,
-}: {
-  fetchApplication: (id: string) => Promise<Application | null>;
+const { fetchApplication }: {
+    fetchApplication: (id: string) => Promise<Application | null>;
 } = findByPropsLazy("fetchApplication");
 
 const TimeBar = findComponentByCodeLazy<{
-  start: number;
-  end: number;
-  themed: boolean;
-  className: string;
+    start: number;
+    end: number;
+    themed: boolean;
+    className: string;
 }>("isSingleLine");
 
+enum Types {
+    USER_POPOUT = "UserPopout",
+    USER_POPOUT_V2 = "UserPopoutV2",
+    ACTIVITY_FEED = "ActivityFeed",
+    PROFILE = "Profile",
+    PROFILE_V2 = "ProfileV2",
+    STREAM_PREVIEW = "StreamPreview",
+    VOICE_CHANNEL = "VoiceChannel",
+    SIMPLIFIED_PROFILE = "SimplifiedProfile",
+    BITE_SIZE_POPOUT = "BiteSizePopout"
+}
+
 const ActivityView = findComponentByCodeLazy<{
-  activity: Activity | null;
-  user: User;
-  guild: Guild;
-  channelId: string;
-  onClose: () => void;
-      }>("onOpenGameProfile:", "USER_POPOUT_V2");
+    activity: Activity | null;
+    user: User;
+    activityGuild: Guild;
+    type: Types;
+    showChannelDetails: boolean;
+        }>(",onOpenGameProfileModal:");
 
 // if discord one day decides to change their icon this needs to be updated
-const DefaultActivityIcon = findComponentByCodeLazy(
-    "M6,7 L2,7 L2,6 L6,6 L6,7 Z M8,5 L2,5 L2,4 L8,4 L8,5 Z M8,3 L2,3 L2,2 L8,2 L8,3 Z M8.88888889,0 L1.11111111,0 C0.494444444,0 0,0.494444444 0,1.11111111 L0,8.88888889 C0,9.50253861 0.497461389,10 1.11111111,10 L8.88888889,10 C9.50253861,10 10,9.50253861 10,8.88888889 L10,1.11111111 C10,0.494444444 9.5,0 8.88888889,0 Z",
-);
+const DefaultActivityIcon = findComponentByCodeLazy("M6,7 L2,7 L2,6 L6,6 L6,7 Z M8,5 L2,5 L2,4 L8,4 L8,5 Z M8,3 L2,3 L2,2 L8,2 L8,3 Z M8.88888889,0 L1.11111111,0 C0.494444444,0 0,0.494444444 0,1.11111111 L0,8.88888889 C0,9.50253861 0.497461389,10 1.11111111,10 L8.88888889,10 C9.50253861,10 10,9.50253861 10,8.88888889 L10,1.11111111 C10,0.494444444 9.5,0 8.88888889,0 Z");
 
 const fetchedApplications = new Map<string, Application | null>();
 
 const xboxUrl = "https://discord.com/assets/9a15d086141be29d9fcd.png"; // TODO: replace with "renderXboxImage"?
 
-function getActivityImage(
-    activity: Activity,
-    application?: Application,
-): string | undefined {
+function getActivityImage(activity: Activity, application?: Application): string | undefined {
     if (activity.type === 2 && activity.name === "Spotify") {
-    // get either from large or small image
+        // get either from large or small image
         const image = activity.assets?.large_image ?? activity.assets?.small_image;
         // image needs to replace 'spotify:'
         if (image?.startsWith("spotify:")) {
@@ -169,10 +154,7 @@ function getActivityImage(
 }
 
 function getValidTimestamps(activity: Activity): Required<Timestamp> | null {
-    if (
-        activity.timestamps?.start !== undefined &&
-    activity.timestamps?.end !== undefined
-    ) {
+    if (activity.timestamps?.start !== undefined && activity.timestamps?.end !== undefined) {
         return activity.timestamps as Required<Timestamp>;
     }
     return null;
@@ -188,24 +170,15 @@ function getValidStartTimeStamp(activity: Activity): number | null {
 const customFormat = (momentObj: moment.Moment): string => {
     const hours = momentObj.hours();
     const formattedTime = momentObj.format("mm:ss");
-    return hours > 0
-        ? `${momentObj.format("HH:")}${formattedTime}`
-        : formattedTime;
+    return hours > 0 ? `${momentObj.format("HH:")}${formattedTime}` : formattedTime;
 };
 
-function formatElapsedTime(
-    startTime: moment.Moment,
-    endTime: moment.Moment,
-): string {
+function formatElapsedTime(startTime: moment.Moment, endTime: moment.Moment): string {
     const duration = moment.duration(endTime.diff(startTime));
     return `${customFormat(moment.utc(duration.asMilliseconds()))} elapsed`;
 }
 
-const ActivityTooltip = ({
-    activity,
-    application,
-    user,
-}: Readonly<{ activity: Activity; application?: Application; user: User }>) => {
+const ActivityTooltip = ({ activity, application, user }: Readonly<{ activity: Activity, application?: Application, user: User; }>) => {
     const image = useMemo(() => {
         const activityImage = getActivityImage(activity, application);
         if (activityImage) {
@@ -221,35 +194,20 @@ const ActivityTooltip = ({
     return (
         <ErrorBoundary>
             <div className={cl("activity")}>
-                {image && (
-                    <img
-                        className={cl("activity-image")}
-                        src={image}
-                        alt="Activity logo"
-                    />
-                )}
+                {image && <img className={cl("activity-image")} src={image} alt="Activity logo" />}
                 <div className={cl("activity-title")}>{activity.name}</div>
                 {hasDetails && <div className={cl("activity-divider")} />}
                 <div className={cl("activity-details")}>
                     <div>{activity.details}</div>
                     <div>{activity.state}</div>
-                    {settings.store.showAppDescriptions && application?.description && (
-                        <div>{application.description}</div>
-                    )}
-                    {!timestamps && startTime && (
+                    {settings.store.showAppDescriptions && application?.description && <div>{application.description}</div>}
+                    {!timestamps && startTime &&
                         <div className={cl("activity-time-bar")}>
                             {formatElapsedTime(moment(startTime), moment())}
                         </div>
-                    )}
+                    }
                 </div>
-                {timestamps && (
-                    <TimeBar
-                        start={timestamps.start}
-                        end={timestamps.end}
-                        themed={false}
-                        className={cl("activity-time-bar")}
-                    />
-                )}
+                {timestamps && <TimeBar start={timestamps.start} end={timestamps.end} themed={false} className={cl("activity-time-bar")} />}
             </div>
         </ErrorBoundary>
     );
@@ -257,9 +215,7 @@ const ActivityTooltip = ({
 
 function getApplicationIcons(activities: Activity[], preferSmall = false) {
     const applicationIcons: ApplicationIcon[] = [];
-    const applications = activities.filter(
-        activity => activity.application_id || activity.platform,
-    );
+    const applications = activities.filter(activity => activity.application_id || activity.platform);
 
     for (const activity of applications) {
         const { assets, application_id, platform } = activity;
@@ -274,14 +230,14 @@ function getApplicationIcons(activities: Activity[], preferSmall = false) {
                     if (settings.store.renderGifs || !discordMediaLink.endsWith(".gif")) {
                         applicationIcons.push({
                             image: { src: discordMediaLink, alt },
-                            activity,
+                            activity
                         });
                     }
                 } else {
                     const src = `https://cdn.discordapp.com/app-assets/${application_id}/${image}.png`;
                     applicationIcons.push({
                         image: { src, alt },
-                        activity,
+                        activity
                     });
                 }
             };
@@ -307,9 +263,7 @@ function getApplicationIcons(activities: Activity[], preferSmall = false) {
             let application = ApplicationStore.getApplication(application_id);
             if (!application) {
                 if (fetchedApplications.has(application_id)) {
-                    application = fetchedApplications.get(
-                        application_id,
-                    ) as Application | null;
+                    application = fetchedApplications.get(application_id) as Application | null;
                 } else {
                     fetchedApplications.set(application_id, null);
                     fetchApplication(application_id).then(app => {
@@ -324,13 +278,13 @@ function getApplicationIcons(activities: Activity[], preferSmall = false) {
                     applicationIcons.push({
                         image: { src, alt: application.name },
                         activity,
-                        application,
+                        application
                     });
                 } else if (platform === "xbox") {
                     applicationIcons.push({
                         image: { src: xboxUrl, alt: "Xbox" },
                         activity,
-                        application,
+                        application
                     });
                 }
             }
@@ -338,7 +292,7 @@ function getApplicationIcons(activities: Activity[], preferSmall = false) {
             if (platform === "xbox") {
                 applicationIcons.push({
                     image: { src: xboxUrl, alt: "Xbox" },
-                    activity,
+                    activity
                 });
             }
         }
@@ -351,20 +305,17 @@ migratePluginSettings("BetterActivities", "MemberListActivities");
 
 export default definePlugin({
     name: "BetterActivities",
-    description:
-    "Shows activity icons in the member list and allows showing all activities",
-    authors: [Devs.D3SOX, Devs.Arjix, Devs.AutumnVN],
+    description: "Shows activity icons in the member list and allows showing all activities",
+    authors: [
+        Devs.D3SOX,
+        Devs.Arjix,
+        Devs.AutumnVN
+    ],
     tags: ["activity"],
 
     settings,
 
-    patchActivityList: ({
-        activities,
-        user,
-    }: {
-    activities: Activity[];
-    user: User;
-  }): JSX.Element | null => {
+    patchActivityList: ({ activities, user }: { activities: Activity[], user: User; }): JSX.Element | null => {
         const icons: ActivityListIcon[] = [];
 
         const applicationIcons = getApplicationIcons(activities);
@@ -373,36 +324,23 @@ export default definePlugin({
                 return a.image.src === b.image.src;
             };
             const uniqueIcons = applicationIcons.filter((element, index, array) => {
-                return (
-                    array.findIndex(el => compareImageSource(el, element)) === index
-                );
+                return array.findIndex(el => compareImageSource(el, element)) === index;
             });
             for (const appIcon of uniqueIcons) {
                 icons.push({
                     iconElement: <img {...appIcon.image} />,
-                    tooltip: (
-                        <ActivityTooltip
-                            activity={appIcon.activity}
-                            application={appIcon.application}
-                            user={user}
-                        />
-                    ),
+                    tooltip: <ActivityTooltip activity={appIcon.activity} application={appIcon.application} user={user} />
                 });
             }
         }
 
-        const addActivityIcon = (
-            activityName: string,
-            IconComponent: React.ComponentType,
-        ) => {
-            const activityIndex = activities.findIndex(
-                ({ name }) => name === activityName,
-            );
+        const addActivityIcon = (activityName: string, IconComponent: React.ComponentType) => {
+            const activityIndex = activities.findIndex(({ name }) => name === activityName);
             if (activityIndex !== -1) {
                 const activity = activities[activityIndex];
                 const iconObject: ActivityListIcon = {
                     iconElement: <IconComponent />,
-                    tooltip: <ActivityTooltip activity={activity} user={user} />,
+                    tooltip: <ActivityTooltip activity={activity} user={user} />
                 };
 
                 if (settings.store.specialFirst) {
@@ -420,35 +358,27 @@ export default definePlugin({
                 "--icon-size": `${settings.store.iconSize}px`,
             };
 
-            return (
-                <ErrorBoundary noop>
-                    <div className={cl("row")}>
-                        {icons.map(({ iconElement, tooltip }, i) => (
-                            <div key={i} className={cl("icon")} style={iconStyle}>
-                                {tooltip ? (
-                                    <Tooltip text={tooltip}>
-                                        {({ onMouseEnter, onMouseLeave }) => (
-                                            <div
-                                                onMouseEnter={onMouseEnter}
-                                                onMouseLeave={onMouseLeave}
-                                            >
-                                                {iconElement}
-                                            </div>
-                                        )}
-                                    </Tooltip>
-                                ) : (
-                                    iconElement
+            return <ErrorBoundary noop>
+                <div className={cl("row")}>
+                    {icons.map(({ iconElement, tooltip }, i) => (
+                        <div key={i} className={cl("icon")} style={iconStyle}>
+                            {tooltip ? <Tooltip text={tooltip}>
+                                {({ onMouseEnter, onMouseLeave }) => (
+                                    <div
+                                        onMouseEnter={onMouseEnter}
+                                        onMouseLeave={onMouseLeave}>
+                                        {iconElement}
+                                    </div>
                                 )}
-                            </div>
-                        ))}
-                    </div>
-                </ErrorBoundary>
-            );
+                            </Tooltip> : iconElement}
+                        </div>
+                    ))}
+                </div>
+            </ErrorBoundary>;
         } else {
             // Show default icon when there are no custom icons
             // We need to filter out custom statuses
-            const shouldShow =
-        activities.filter(a => a.type !== 4).length !== icons.length;
+            const shouldShow = activities.filter(a => a.type !== 4).length !== icons.length;
             if (shouldShow) {
                 return <DefaultActivityIcon />;
             }
@@ -457,28 +387,14 @@ export default definePlugin({
         return null;
     },
 
-    showAllActivitiesComponent({
-        activity,
-        user,
-        guild,
-        channelId,
-        onClose,
-    }: Readonly<{
-    activity: Activity;
-    user: User;
-    guild: Guild;
-    channelId: string;
-    onClose: () => void;
-  }>) {
-        const [currentActivity, setCurrentActivity] =
-      React.useState<Activity | null>(activity?.type !== 4 ? activity! : null);
+    showAllActivitiesComponent({ activity, user, guild, channelId, onClose }: Readonly<{ activity: Activity; user: User, guild: Guild, channelId: string, onClose: () => void; }>) {
+        const [currentActivity, setCurrentActivity] = React.useState<Activity | null>(
+            activity?.type !== 4 ? activity! : null
+        );
 
-        const activities =
-      useStateFromStores<Activity[]>([PresenceStore], () =>
-          PresenceStore.getActivities(user.id).filter(
-              (activity: Activity) => activity.type !== 4,
-          ),
-      ) ?? [];
+        const activities = useStateFromStores<Activity[]>(
+            [PresenceStore], () => PresenceStore.getActivities(user.id).filter((activity: Activity) => activity.type !== 4)
+        ) ?? [];
 
         React.useEffect(() => {
             if (!activities.length) {
@@ -494,14 +410,13 @@ export default definePlugin({
 
         if (settings.store.allActivitiesStyle === "carousel") {
             return (
-                <div style={{ display: "flex", flexDirection: "column" }}>
+                <div className={cl("temp-fix")} style={{ display: "flex", flexDirection: "column" }}>
                     <ActivityView
+                        type={Types.SIMPLIFIED_PROFILE}
                         activity={currentActivity}
                         user={user}
-                        guild={guild}
-                        channelId={channelId}
-                        onClose={onClose}
-                    />
+                        activityGuild={guild}
+                        showChannelDetails={true}/>
                     <div
                         className={cl("controls")}
                         style={{
@@ -510,66 +425,59 @@ export default definePlugin({
                             justifyContent: "space-between",
                         }}
                     >
-                        <Tooltip text="Left" tooltipClassName={cl("controls-tooltip")}>
-                            {({ onMouseEnter, onMouseLeave }) => {
-                                return (
-                                    <span
-                                        onMouseEnter={onMouseEnter}
-                                        onMouseLeave={onMouseLeave}
-                                        onClick={() => {
-                                            const index = activities.indexOf(currentActivity!);
-                                            if (index - 1 >= 0)
-                                                setCurrentActivity(activities[index - 1]);
-                                        }}
-                                    >
-                                        <Caret
-                                            disabled={activities.indexOf(currentActivity!) < 1}
-                                            direction="left"
-                                        />
-                                    </span>
-                                );
-                            }}
-                        </Tooltip>
+                        <Tooltip text="Left" tooltipClassName={cl("controls-tooltip")}>{({
+                            onMouseEnter,
+                            onMouseLeave
+                        }) => {
+                            return <span
+                                onMouseEnter={onMouseEnter}
+                                onMouseLeave={onMouseLeave}
+                                onClick={() => {
+                                    const index = activities.indexOf(currentActivity!);
+                                    if (index - 1 >= 0)
+                                        setCurrentActivity(activities[index - 1]);
+                                }}
+                            >
+                                <Caret
+                                    disabled={activities.indexOf(currentActivity!) < 1}
+                                    direction="left"/>
+                            </span>;
+                        }}</Tooltip>
 
                         <div className="carousell">
                             {activities.map((activity, index) => (
                                 <div
                                     key={"dot--" + index}
                                     onClick={() => setCurrentActivity(activity)}
-                                    className={`dot ${currentActivity === activity ? "selected" : ""}`}
-                                />
+                                    className={`dot ${currentActivity === activity ? "selected" : ""}`}/>
                             ))}
                         </div>
 
-                        <Tooltip text="Right" tooltipClassName={cl("controls-tooltip")}>
-                            {({ onMouseEnter, onMouseLeave }) => {
-                                return (
-                                    <span
-                                        onMouseEnter={onMouseEnter}
-                                        onMouseLeave={onMouseLeave}
-                                        onClick={() => {
-                                            const index = activities.indexOf(currentActivity!);
-                                            if (index + 1 < activities.length)
-                                                setCurrentActivity(activities[index + 1]);
-                                        }}
-                                    >
-                                        <Caret
-                                            disabled={
-                                                activities.indexOf(currentActivity!) >=
-                        activities.length - 1
-                                            }
-                                            direction="right"
-                                        />
-                                    </span>
-                                );
-                            }}
-                        </Tooltip>
+                        <Tooltip text="Right" tooltipClassName={cl("controls-tooltip")}>{({
+                            onMouseEnter,
+                            onMouseLeave
+                        }) => {
+                            return <span
+                                onMouseEnter={onMouseEnter}
+                                onMouseLeave={onMouseLeave}
+                                onClick={() => {
+                                    const index = activities.indexOf(currentActivity!);
+                                    if (index + 1 < activities.length)
+                                        setCurrentActivity(activities[index + 1]);
+                                }}
+                            >
+                                <Caret
+                                    disabled={activities.indexOf(currentActivity!) >= activities.length - 1}
+                                    direction="right"/>
+                            </span>;
+                        }}</Tooltip>
                     </div>
                 </div>
             );
         } else {
             return (
                 <div
+                    className={cl("temp-fix")}
                     style={{
                         display: "flex",
                         flexDirection: "column",
@@ -579,11 +487,11 @@ export default definePlugin({
                     {activities.map((activity, index) => (
                         <ActivityView
                             key={index}
+                            type={Types.SIMPLIFIED_PROFILE}
                             activity={activity}
                             user={user}
-                            guild={guild}
-                            channelId={channelId}
-                            onClose={onClose}
+                            activityGuild={guild}
+                            showChannelDetails={true}
                         />
                     ))}
                 </div>
@@ -597,7 +505,7 @@ export default definePlugin({
             find: ".getHangStatusActivity():null!",
             replacement: {
                 match: /null!=(\i)&&\i.some\(\i=>\(0,\i.\i\)\(\i,\i\)\)\?/,
-                replace: "$self.patchActivityList(e),false?",
+                replace: "$self.patchActivityList(e),false?"
             },
             predicate: () => settings.store.memberList,
         },
@@ -605,11 +513,10 @@ export default definePlugin({
             // Show all activities in the user popout/sidebar
             find: '"BiteSizeProfileActivitySection"',
             replacement: {
-                match:
-          /(?<=\(0,\i\.jsx\)\()\i\.\i(?=,{type:\i.\i.BITE_SIZE_POPOUT,activity:\i,className:\i\.activity,source:\i,user:\i)/,
-                replace: "$self.showAllActivitiesComponent",
+                match: /(?<=\(0,\i\.jsx\)\()\i\.\i(?=,{type:\i.\i.BITE_SIZE_POPOUT,activity:\i,className:\i\.activity,source:\i,user:\i)/,
+                replace: "$self.showAllActivitiesComponent"
             },
-            predicate: () => settings.store.userPopout,
+            predicate: () => settings.store.userPopout
         },
     ],
 });
