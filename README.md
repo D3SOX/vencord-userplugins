@@ -1,42 +1,7 @@
-# WARNING
-
-> [!WARNING]
-> For now this repo is not supported as Vencord broke the way my repo worked
-> 
-> Therefore the current up-to-date source is the [my branch of Vencord](https://github.com/D3SOX/Vencord) where the plugins reside in [`src/plugins-extra`](https://github.com/D3SOX/Vencord/tree/mybuild/src/plugins-extra).  
-> If you download them manually you won't get any updates and have to redownload them every time I change something  
-> So the only way to keep updated is to install my branch. [See instructions](https://github.com/D3SOX/Vencord?tab=readme-ov-file#installing--uninstalling)
-
 # WIP
 
-
 > [!NOTE]
-> This will change as [#40](https://github.com/D3SOX/vencord-userplugins/issues/40) gets implemented. See [the issue](https://github.com/D3SOX/vencord-userplugins/issues/40) for the progress.
-
----
----
----
----
----
----
----
----
----
----
----
----
----
----
----
----
----
----
----
----
----
----
----
----
+> This way this repo will change as [#40](https://github.com/D3SOX/vencord-userplugins/issues/40) gets implemented. See [the issue](https://github.com/D3SOX/vencord-userplugins/issues/40) for the progress.
 
 <div align="center">
 
@@ -84,26 +49,24 @@ Allows you to perform multiple actions on an entire channel (move, mute, disconn
 If you don't know how to install userplugins in the first place please see the manual [Vencord installation guide](https://docs.vencord.dev/installing/). If using Vesktop specify the location in Vesktop settings instead of running `pnpm inject`
 
 > [!TIP]
-> There's also [this video by Syncxv](https://youtu.be/8wexjSo8fNw) which shows how to install a userplugin on Windows.  
-> Just be sure to replace the `git clone` command with the one from below
+> There's also [this video by Syncxv](https://youtu.be/8wexjSo8fNw) which shows how to install a userplugin on Windows.
 
-Clone the repository inside your Vencord `src/userplugins` folder (create the folder if it doesn't exist)
+Clone the repository where you also cloned your Vencord folder (create the `userplugins` folder if it doesn't exist)
 ```bash
-cd Vencord/src/userplugins
 git clone https://github.com/D3SOX/vencord-userplugins D3SOX-userplugins
+cp -r D3SOX-userplugins/* Vencord/src/userplugins
+cd Vencord
 pnpm build
 ````
 
 # Update
 
-> [!IMPORTANT]
-> By installing the repo an updater is installed which automatically checks for updates. The automatic checking can be disabled.  
-> Open the settings of the `D3SOXUpdater` plugin to manually check for updates
-
-To manually update just pull the latest changes inside the repository folder
+To update just pull the latest changes inside the repository folder and sync the changes
 ```bash
-cd Vencord/src/userplugins/D3SOX-userplugins
-git pull
+( cd D3SOX-userplugins && git pull )
+rm -rf Vencord/src/userplugins/pluginName
+cp -r D3SOX-userplugins/pluginName Vencord/src/userplugins/
+cd Vencord
 pnpm build
 ```
 
