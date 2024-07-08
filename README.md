@@ -51,6 +51,8 @@ If you don't know how to install userplugins in the first place please see the m
 > [!TIP]
 > There's also [this video by Syncxv](https://youtu.be/8wexjSo8fNw) which shows how to install a userplugin on Windows.
 
+:warning: **Important:** If you're on Windows you need to use Git Bash for the commands to work. If you installed Git using the Vencord installation guide you should already have it and can open in in a folder with the right click menu.
+
 Clone the repository where you also cloned your Vencord folder (create the `userplugins` folder if it doesn't exist)
 ```bash
 git clone https://github.com/D3SOX/vencord-userplugins D3SOX-userplugins
@@ -60,6 +62,8 @@ pnpm build
 ````
 
 # Update
+
+:warning: **Important:** If you're on Windows you need to use Git Bash for the commands to work. If you installed Git using the Vencord installation guide you should already have it and can open in in a folder with the right click menu.
 
 To update just pull the latest changes inside the repository folder and sync the changes
 ```bash
