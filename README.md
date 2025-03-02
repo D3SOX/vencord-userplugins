@@ -14,7 +14,7 @@ Shows activity icons in the member list and allows showing all activities
 🔇 [**BlockKrisp**](https://github.com/D3SOX/vc-blockKrisp) (`https://github.com/D3SOX/vc-blockKrisp`)  
 Prevent Krisp from loading
 
-🎡 [**CustomUserCommands**](https://github.com/D3SOX/vc-customUserCommands) (`https://github.com/D3SOX/vc-customUserCommands`)  
+🧑‍💻 [**CustomUserCommands**](https://github.com/D3SOX/vc-customUserCommands) (`https://github.com/D3SOX/vc-customUserCommands`)  
 Configure custom commands to run on users (via context menu)
 
 🤝 [**FollowUser**](https://github.com/D3SOX/vc-followUser) (`https://github.com/D3SOX/vc-followUser`)  
