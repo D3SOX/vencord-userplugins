@@ -29,7 +29,7 @@ Adds an icon to change the playback speed of media embeds
 🔔 [**NotifyUserChanges**](https://github.com/D3SOX/vc-notifyUserChanges) (`https://github.com/D3SOX/vc-notifyUserChanges`)  
 Adds a notify option in the user context menu to get notified when a user changes voice channels or online status
 
-👤 [**ServerProfilesToolbox**](https://github.com/D3SOX/vc-serverProfilesToolbox) (`https://github.com/D3SOX/vc-serverProfilesToolbox`)  
+👤 [**ServerProfilesToolbox**](https://github.com/D3SOX/vc-serverProfilesToolbox) (`https://github.com/D3SOX/vc-serverProfilesToolbox`)  (⚠️ currently not working and untaintained)
 Adds a copy/paste/reset button to the server profiles editor
 
 🤫 [**SilentTyping**](https://github.com/D3SOX/vc-silentTypingEnhanced) (`https://github.com/D3SOX/vc-silentTypingEnhanced`)  
