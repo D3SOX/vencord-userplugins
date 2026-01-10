@@ -52,8 +52,9 @@ Clone the repository inside your Vencord `src/userplugins` folder (create the `u
 cd Vencord/src/userplugins
 git clone https://github.com/D3SOX/vc-pluginName
 pnpm build
-pnpm inject
 ````
+
+Depending on your Vencord installation method (Discord Desktop / Vesktop / Web), you may need to run additional commands to apply the changes. For the correct steps, see https://docs.vencord.dev/installing/#installing-your-custom-build
 
 # Update
 
