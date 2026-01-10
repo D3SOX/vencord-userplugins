@@ -54,6 +54,8 @@ git clone https://github.com/D3SOX/vc-pluginName
 pnpm build
 ````
 
+Depending on your Vencord installation method (Discord Desktop / Vesktop / Web), you may need to run additional commands to apply the changes. For the correct steps, see https://docs.vencord.dev/installing/#installing-your-custom-build
+
 # Update
 
 To update just pull the latest changes inside the repository folder and sync the changes
