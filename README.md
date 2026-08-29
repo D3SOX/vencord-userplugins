@@ -1,3 +1,6 @@
+> [!WARNING]
+> I'm not using Discord anymore because of privacy concerns. So these are unmaintained and provided "as is". Feel free to fork, fix, improve, etc...
+
 <div align="center">
 
 ![Vencord Logo](https://github.com/D3SOX/vencord-userplugins/assets/24937357/f5c06f0e-9d8c-4cca-b990-953d675ec71d)
